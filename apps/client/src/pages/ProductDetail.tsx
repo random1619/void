@@ -16,6 +16,7 @@ import { useMagnetic } from '../hooks/useMagnetic';
 import { useSpringPress } from '../hooks/useSpringPress';
 import api from '../lib/api';
 import { toast } from 'sonner';
+import { Image } from '../components/ui/Image';
 
 /**
  * Parallax product image — the image shifts opposite to cursor movement
@@ -408,7 +409,7 @@ export default function ProductDetail() {
                     aria-label={`View image ${i + 1} of ${colorImages.length}`}
                     aria-pressed={activeImage === i}
                   >
-                    <img
+                    <Image
                       src={img}
                       alt={`${product.name} view ${i + 1}`}
                       loading="lazy"

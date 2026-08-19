@@ -8,6 +8,7 @@ import { useCartStore } from '../../stores/cartStore';
 import { useReducedMotion } from 'framer-motion';
 
 import { toast } from 'sonner';
+import { Image } from '../ui/Image';
 
 interface ProductCardProps {
   product: Product;
@@ -179,7 +180,7 @@ export function ProductCard({ product, showDetails = true, imagePriority = false
         aria-label={`${product.name} by ${product.brand}`}
       >
         {product.images?.[0] ? (
-          <img
+          <Image
             src={product.images[0].url}
             alt={product.images[0].alt || product.name}
             loading={imagePriority ? 'eager' : 'lazy'}

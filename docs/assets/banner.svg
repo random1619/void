@@ -1,0 +1,60 @@
+<svg width="1000" height="300" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a">
+        <animate attributeName="stop-color" values="#0a0a0a;#1a1a1a;#0a0a0a" dur="10s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="100%" stop-color="#111111">
+        <animate attributeName="stop-color" values="#111111;#050505;#111111" dur="10s" repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    <linearGradient id="text-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8c7851" />
+      <stop offset="50%" stop-color="#e0d7c6" />
+      <stop offset="100%" stop-color="#8c7851" />
+      <animate attributeName="x1" values="-100%;100%" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="x2" values="0%;200%" dur="3s" repeatCount="indefinite" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="1000" height="300" fill="url(#bg)" />
+  
+  <!-- Grid Lines -->
+  <g stroke="#ffffff" stroke-opacity="0.05" stroke-width="1">
+    <path d="M 0 50 H 1000 M 0 100 H 1000 M 0 150 H 1000 M 0 200 H 1000 M 0 250 H 1000" />
+    <path d="M 100 0 V 300 M 200 0 V 300 M 300 0 V 300 M 400 0 V 300 M 500 0 V 300 M 600 0 V 300 M 700 0 V 300 M 800 0 V 300 M 900 0 V 300" />
+  </g>
+
+  <!-- Animated Particles -->
+  <circle cx="200" cy="150" r="1.5" fill="#8c7851" filter="url(#glow)">
+    <animate attributeName="cy" values="150;50;150" dur="8s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="8s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="800" cy="200" r="1.5" fill="#8c7851" filter="url(#glow)">
+    <animate attributeName="cy" values="200;280;200" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="12s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="500" cy="100" r="2" fill="#ffffff" filter="url(#glow)">
+    <animate attributeName="opacity" values="0;0.5;0" dur="5s" repeatCount="indefinite" />
+  </circle>
+
+  <g transform="translate(500, 150)" text-anchor="middle">
+    <!-- Main Title -->
+    <text y="10" font-family="'Inter', -apple-system, sans-serif" font-weight="900" font-size="82" letter-spacing="24" fill="url(#text-gradient)">
+      VOID
+    </text>
+    
+    <!-- Subtitle -->
+    <text y="60" font-family="monospace" font-size="12" letter-spacing="8" fill="#a0a0a0">
+      WORLD-CLASS LUXURY 3D FASHION
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite" />
+    </text>
+  </g>
+</svg>

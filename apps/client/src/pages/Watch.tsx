@@ -13,6 +13,7 @@ import type { Product } from '../types';
 import { formatPrice } from '../lib/utils';
 import { springs } from '../lib/motion-tokens';
 import { toast } from 'sonner';
+import { Image } from '../components/ui/Image';
 
 /**
  * Watches — Ivory Atelier edition.
@@ -352,7 +353,7 @@ export default function Watch() {
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute inset-0"
                 >
-                  <img
+                  <Image
                     src={heroImages[activeImage]}
                     alt={`VOID Monolith in ${selectedColorway.name} · view ${activeImage + 1} of 2`}
                     className="w-full h-full object-cover grayscale-[0.55] transition-[filter] duration-700 ease-luxury group-hover/hero:grayscale-0 group-focus-within/hero:grayscale-0"
@@ -494,7 +495,7 @@ export default function Watch() {
             className="lg:col-span-7 order-1 lg:order-2"
           >
             <figure className="atelier-frame atelier-frame-hover relative">
-              <img
+              <Image
                 src={selectedColorway.detailImage}
                 alt="Macro detail of the Glucydur balance wheel and 27 ruby jewels"
                 className="w-full aspect-[16/10] object-cover grayscale-[0.6] transition-[filter] duration-700 hover:grayscale-0"
@@ -744,7 +745,7 @@ export default function Watch() {
                   className="group flex flex-col border border-hairline bg-ivory hover:border-ink transition-colors duration-500"
                 >
                   <div className="relative aspect-square overflow-hidden bg-bone border-b border-hairline">
-                    <img
+                    <Image
                       src={watch.images[0].url}
                       alt={watch.images[0].alt}
                       loading="lazy"

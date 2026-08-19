@@ -9,6 +9,7 @@ import { formatPrice, formatDate } from '../lib/utils';
 import { fadeUpVariants, staggerContainer, staggerItem } from '../lib/animations';
 import { toast } from 'sonner';
 import { OrderSkeleton, AddressSkeleton } from '../components/ui/LoadingSkeleton';
+import { Image } from '../components/ui/Image';
 
 /* ------------------------------------------------------------------ */
 /* Shared ledger-row + card primitives for the account area.           */
@@ -229,7 +230,7 @@ function WishlistOverview() {
               >
                 <div className="aspect-[3/4] bg-[var(--bone)] overflow-hidden">
                   {product.images?.[0] ? (
-                    <img
+                    <Image
                       src={product.images[0].url}
                       alt={product.images[0].alt || product.name}
                       loading="lazy"

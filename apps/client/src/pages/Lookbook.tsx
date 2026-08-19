@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EASE_LUXURY, EASE_EXIT } from '../lib/animations';
 import { prefersReducedMotion } from '../lib/utils';
+import { Image } from '../components/ui/Image';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -162,7 +163,7 @@ function Masthead() {
           transition={{ duration: 2, ease: EASE_LUXURY }}
           className="absolute inset-[-8%] will-change-transform"
         >
-          <img
+          <Image
             src="/lookbook_hero_wide.jpg"
             alt=""
             className="w-full h-full object-cover"
@@ -341,7 +342,7 @@ const EditorialSpread = memo(function EditorialSpread({
             className="group relative aspect-[3/4] md:aspect-[4/5] overflow-hidden rounded-2xl atelier-frame atelier-frame-hover cursor-pointer shadow-lg active:cursor-pointer"
             onClick={() => onOpenLightbox(index)}
           >
-            <img
+            <Image
               src={look.image}
               alt={look.title}
               loading="lazy"
@@ -532,7 +533,7 @@ function Lightbox({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-black/50">
-            <img
+            <Image
               src={look.detail}
               alt={look.title}
               className="max-w-full max-h-[68vh] object-contain mx-auto"
@@ -649,7 +650,7 @@ function DragGallery({ onOpenLightbox }: { onOpenLightbox: (index: number) => vo
                 className="atelier-frame aspect-[4/5] overflow-hidden rounded-lg cursor-pointer"
                 onClick={() => onOpenLightbox(i)}
               >
-                <img src={look.image} alt={look.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                <Image src={look.image} alt={look.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </div>
               <figcaption className="mt-4 flex justify-between items-baseline">
                 <span className="atelier-eyebrow text-ink-mute text-[10px]">Look {look.id}</span>
@@ -799,7 +800,7 @@ function DragGallery({ onOpenLightbox }: { onOpenLightbox: (index: number) => vo
                 if (!suppressClickRef.current) onOpenLightbox(i);
               }}
             >
-              <img
+              <Image
                 src={look.image}
                 alt={look.title}
                 loading="lazy"
@@ -1119,7 +1120,7 @@ function MaterialBento() {
             >
               {/* Background image backdrop with dark overlay */}
               <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-                <img
+                <Image
                   src={card.image}
                   alt=""
                   loading="lazy"

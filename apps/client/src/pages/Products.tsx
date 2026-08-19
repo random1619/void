@@ -10,6 +10,7 @@ import { springs } from '../lib/motion-tokens';
 import { useMagnetic } from '../hooks/useMagnetic';
 import { useSpringPress } from '../hooks/useSpringPress';
 import type { ProductFilters, Product } from '../types';
+import { Image } from '../components/ui/Image';
 
 type ViewMode = 'grid' | 'editorial';
 
@@ -531,7 +532,7 @@ function EditorialRow({ product, index }: { product: Product; index: number }) {
 
         <div className="col-span-4 md:col-span-3 aspect-[3/4] overflow-hidden bg-[var(--bone)] border border-hairline relative">
           {product.images?.[0] ? (
-            <img
+            <Image
               src={product.images[0].url}
               alt={product.images[0].alt || product.name}
               loading="lazy"

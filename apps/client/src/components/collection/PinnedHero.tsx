@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 import { useGsapParallax } from '../../hooks/useGsapScrollEffect';
+import { Image } from '../ui/Image';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +21,7 @@ export function PinnedHero() {
     >
       {/* Cinematic background layer */}
       <div ref={imageRef} className="absolute inset-0 will-change-transform" aria-hidden="true">
-        <img
+        <Image
           src="/lookbook-1-alt.png"
           alt=""
           loading="eager"

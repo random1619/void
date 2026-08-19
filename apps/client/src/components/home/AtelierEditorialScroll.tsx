@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Compass, ShieldCheck, Layers, ArrowUpRight } from 'lucide-react';
 import { springs } from '../../lib/motion-tokens';
+import { Image } from '../ui/Image';
 
 interface ChapterSpec {
   label: string;
@@ -207,7 +208,7 @@ export function AtelierEditorialScroll() {
               >
                 {/* Image Container with Telemetry Pill */}
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-[var(--bone)] border border-hairline group">
-                  <img
+                  <Image
                     src={currentChapter.image}
                     alt={currentChapter.title}
                     loading="lazy"

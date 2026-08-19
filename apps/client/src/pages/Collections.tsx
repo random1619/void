@@ -13,6 +13,7 @@ import api from '../lib/api';
 import type { Category } from '../types';
 import { CategorySkeleton } from '../components/ui/LoadingSkeleton';
 import { useDialog } from '../hooks/useDialog';
+import { Image } from '../components/ui/Image';
 
 /**
  * VOID Collections — Cinematic Editorial Lookbook
@@ -547,7 +548,7 @@ export default function Collections() {
                 className="md:col-span-8 md:row-span-2 relative group overflow-hidden border border-hairline hover:border-[rgba(var(--sienna-rgb),0.4)] cursor-pointer transition-colors card-lift"
                 onClick={() => openLookbook('haute-couture')}
               >
-                <img
+                <Image
                   src={LOOKBOOKS['haute-couture'].looks[2].image}
                   alt="Ivory Studies · SS 2023 Archive"
                   loading="lazy"
@@ -583,7 +584,7 @@ export default function Collections() {
                 className="md:col-span-4 relative group overflow-hidden border border-hairline hover:border-[rgba(var(--sienna-rgb),0.4)] cursor-pointer transition-colors card-lift"
                 onClick={() => openLookbook('future-street')}
               >
-                <img
+                <Image
                   src={LOOKBOOKS['haute-couture'].looks[1].image}
                   alt="Tonal Embroidery · AW 2022"
                   loading="lazy"
@@ -614,7 +615,7 @@ export default function Collections() {
                 className="md:col-span-4 relative group overflow-hidden border border-hairline hover:border-[rgba(var(--sienna-rgb),0.4)] cursor-pointer transition-colors card-lift"
                 onClick={() => openLookbook('sculptural')}
               >
-                <img
+                <Image
                   src={LOOKBOOKS.sculptural.looks[1].image}
                   alt="Wire Sculpture · SS 2022"
                   loading="lazy"
@@ -645,7 +646,7 @@ export default function Collections() {
                 className="md:col-span-12 relative group overflow-hidden border border-hairline hover:border-[rgba(var(--sienna-rgb),0.4)] cursor-pointer transition-colors card-lift"
                 onClick={() => openLookbook('haute-couture')}
               >
-                <img
+                <Image
                   src={LOOKBOOKS['future-street'].looks[0].image}
                   alt="Genesis Collection Panoramic"
                   loading="lazy"
@@ -786,7 +787,7 @@ export default function Collections() {
                       className="block border border-hairline bg-[var(--bone)]/40 p-6 group-hover:border-[rgba(var(--sienna-rgb),0.5)] transition-colors duration-300 h-full relative overflow-hidden card-lift"
                     >
                       <div className="aspect-[16/9] mb-6 overflow-hidden bg-[var(--bone)] relative">
-                        <img
+                        <Image
                           src={
                             cat.image ||
                             CATEGORY_FALLBACK_IMAGES[cat.slug] ||

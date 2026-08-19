@@ -24,6 +24,7 @@ import { MOBILE_MENU_PANEL_ID } from '../ui/MobileMenu';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { springs } from '../../lib/motion-tokens';
 import { EASE_LUXURY } from '../../lib/animations';
+import { Image } from '../ui/Image';
 
 const DESKTOP_NAV_SPLIT_INDEX = 4;
 const ANNOUNCEMENT_STORAGE_KEY = 'void_announcement_dismissed';
@@ -315,7 +316,7 @@ function MegaMenu({
                   onClick={onNavigate}
                   className="mega-panel-featured group/featured relative block overflow-hidden rounded-xl border border-hairline"
                 >
-                  <img
+                  <Image
                     src={panel.featured.image}
                     alt={panel.featured.alt ?? panel.featured.label}
                     className="h-full w-full object-cover min-h-[160px]"

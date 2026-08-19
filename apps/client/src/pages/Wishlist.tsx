@@ -9,6 +9,7 @@ import { useWishlistStore } from '../stores/wishlistStore';
 import api from '../lib/api';
 import { formatPrice } from '../lib/utils';
 import type { Product } from '../types';
+import { Image } from '../components/ui/Image';
 
 const EASE_FLUID = [0.32, 0.72, 0, 1] as const;
 
@@ -88,7 +89,7 @@ function WishlistRow({ product, index }: { product: Product; index: number }) {
       >
         <div className="h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden bg-[var(--bone)] shrink-0 border border-hairline/60">
           {image ? (
-            <img
+            <Image
               src={image.url}
               alt={image.alt || product.name}
               loading="lazy"

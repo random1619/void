@@ -9,6 +9,7 @@ import type { Product } from '../../types';
 import { formatPrice } from '../../lib/utils';
 import { springs } from '../../lib/motion-tokens';
 import { useDialog } from '../../hooks/useDialog';
+import { Image } from './Image';
 
 const SEARCH_INPUT_ID = 'search-panel-input';
 const SEARCH_TITLE_ID = 'search-panel-title';
@@ -130,7 +131,7 @@ export function SearchPanel() {
                         >
                           <div className="w-16 h-20 bg-[var(--bone)] flex-shrink-0 flex items-center justify-center">
                             {product.images?.[0] ? (
-                              <img src={product.images[0].url} alt={product.name} className="w-full h-full object-cover" />
+                              <Image src={product.images[0].url} alt={product.name} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-3 h-3 rounded-full bg-sienna" />
                             )}

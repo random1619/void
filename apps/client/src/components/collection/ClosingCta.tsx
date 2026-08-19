@@ -37,6 +37,7 @@ function ParallaxText({ children, range = 12 }: { children: React.ReactNode; ran
  * Magnetic CTA button with spring press feedback — inline physics so we
  * avoid a cross-import dependency on the hooks module.
  */
+import { Image } from '../ui/Image';
 function MagneticCtaLink({ to, children }: { to: string; children: React.ReactNode }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const mx = useMotionValue(0);
@@ -75,7 +76,7 @@ export function ClosingCta() {
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center atelier-ink text-ivory overflow-hidden">
       <div className="absolute inset-0" aria-hidden="true">
-        <img
+        <Image
           src="/lookbook-4-alt.png"
           alt=""
           loading="lazy"

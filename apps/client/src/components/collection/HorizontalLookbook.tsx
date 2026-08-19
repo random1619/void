@@ -3,6 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from '../../lib/utils';
+import { Image } from '../ui/Image';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,7 +76,7 @@ export function HorizontalLookbook() {
             className="relative h-full flex-shrink-0 w-[78vw] md:w-[42vw] lg:w-[32vw] group"
           >
             <div className="atelier-frame atelier-frame-hover h-full w-full relative overflow-hidden">
-              <img
+              <Image
                 src={look.image}
                 alt={`Look ${look.id}: ${look.title}`}
                 loading="lazy"

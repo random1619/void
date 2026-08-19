@@ -4,6 +4,7 @@ import { ArrowRight, Compass, Scissors, Watch, FileCheck2, Sparkles, CheckCircle
 import { Link } from 'react-router-dom';
 import { AnimatedHeading } from '../ui/AnimatedHeading';
 import { springs } from '../../lib/motion-tokens';
+import { Image } from '../ui/Image';
 
 interface Step {
   id: string;
@@ -241,7 +242,7 @@ export function AtelierHeritageShowcase() {
             {/* Right Column: High-Res Master Photography Frame */}
             <div className="lg:col-span-6">
               <div className="relative aspect-[16/11] rounded-2xl overflow-hidden bg-bone border border-hairline shadow-md group">
-                <img
+                <Image
                   src={activeStep.image}
                   alt={activeStep.title}
                   loading="lazy"

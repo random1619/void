@@ -7,6 +7,7 @@ import { useDialog } from '../../hooks/useDialog';
 import { useDismissibleSheet } from '../../hooks/useDismissibleSheet';
 import { FreeShippingProgress } from './FreeShippingProgress';
 import type { CartItem } from '../../types';
+import { Image } from './Image';
 
 const CART_TITLE_ID = 'cart-drawer-title';
 export const CART_PANEL_ID = 'cart-drawer-panel';
@@ -109,7 +110,7 @@ function CartDrawerPanel() {
                   aria-label={`View ${item.product.name}`}
                 >
                   {item.product.images?.[0] ? (
-                    <img src={item.product.images[0].url} alt={item.product.name} className="object-cover w-full h-full" />
+                    <Image src={item.product.images[0].url} alt={item.product.name} className="object-cover w-full h-full" />
                   ) : (
                     <div className="w-4 h-4 bg-sienna rounded-full" />
                   )}

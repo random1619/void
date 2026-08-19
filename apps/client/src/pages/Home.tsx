@@ -29,6 +29,7 @@ import { ScrambleText } from '../components/ui/ScrambleText';
 import { formatPrice } from '../lib/utils';
 import { fadeUpVariants, staggerContainer } from '../lib/animations';
 import type { Product } from '../types';
+import { Image } from '../components/ui/Image';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -285,7 +286,7 @@ function HeroSection({ reducedMotion }: { reducedMotion: boolean }) {
           transition={{ duration: 2, ease: [0.33, 1, 0.68, 1] }}
           className="absolute inset-[-8%] will-change-transform"
         >
-          <img
+          <Image
             src="/hero_atelier_flagship.jpg"
             alt=""
             className="w-full h-full object-cover"
@@ -532,7 +533,7 @@ function LivingProof({
                   aria-label={`${p.name} by ${p.brand}`}
                 >
                   {p.images?.[0] ? (
-                    <img
+                    <Image
                       src={p.images[0].url}
                       alt={p.images[0].alt || p.name}
                       loading="lazy"

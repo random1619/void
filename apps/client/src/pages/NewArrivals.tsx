@@ -6,12 +6,13 @@ import { ProductCard } from '../components/product/ProductCard';
 import { FluidGrid } from '../components/ui/FluidGrid';
 import { ProductSkeleton } from '../components/ui/LoadingSkeleton';
 import type { Product } from '../types';
+import { Image } from '../components/ui/Image';
 
 function ArrivalFeature({ product }: { product: Product }) {
   return (
     <article className="grid min-h-[72vh] grid-cols-1 lg:grid-cols-12 border-y border-hairline">
       <Link to={`/products/${product.slug}`} className="group relative min-h-[54vh] overflow-hidden bg-[var(--bone)] lg:col-span-7 lg:min-h-full">
-        <img
+        <Image
           src={product.images[0]?.url}
           alt={product.images[0]?.alt || product.name}
           className="h-full w-full object-cover transition-transform duration-700 ease-luxury hover-hover:group-hover:scale-[1.025]"

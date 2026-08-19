@@ -11,6 +11,7 @@ import { FreeShippingProgress } from '../components/ui/FreeShippingProgress';
 import { useMagnetic } from '../hooks/useMagnetic';
 import { useSpringPress } from '../hooks/useSpringPress';
 import type { CartItem } from '../types';
+import { Image } from '../components/ui/Image';
 
 function getItemMaxStock(item: CartItem): number {
   const size = item.product.sizes?.find((s: any) => s.label === item.size);
@@ -150,7 +151,7 @@ export default function Cart() {
                       aria-label={`View ${item.product.name}`}
                     >
                       {item.product.images?.[0] ? (
-                        <img
+                        <Image
                           src={item.product.images[0].url}
                           alt={item.product.name}
                           loading="lazy"

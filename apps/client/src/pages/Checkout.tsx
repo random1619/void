@@ -10,6 +10,7 @@ import { computeCartTotals } from '../lib/cartCosts';
 import { toast } from 'sonner';
 import api from '../lib/api';
 import { TrustBadges } from '../components/ui/TrustBadges';
+import { Image } from '../components/ui/Image';
 
 export default function Checkout() {
   const { items, getSubtotal, clearCart } = useCartStore();
@@ -405,7 +406,7 @@ export default function Checkout() {
                   <div key={idx} className="flex gap-3">
                     <div className="w-12 h-16 bg-[var(--bone)] flex-shrink-0 border border-hairline">
                       {item.product.images?.[0] ? (
-                        <img src={item.product.images[0].url} alt="" className="w-full h-full object-cover" />
+                        <Image src={item.product.images[0].url} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <div className="w-2 h-2 rounded-full bg-sienna" />

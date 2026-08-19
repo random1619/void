@@ -19,6 +19,7 @@ import { formatPrice } from '../lib/utils';
 import { staggerContainer, staggerItem, fadeUpVariants } from '../lib/animations';
 import { useAuthStore } from '../stores/authStore';
 import { toast } from 'sonner';
+import { Image } from '../components/ui/Image';
 
 /* Shared input class — recessed seat with sienna focus. */
 const FIELD =
@@ -612,7 +613,7 @@ function AdminProducts() {
                   </span>
                   <div className="w-12 h-14 bg-[var(--bone)] border border-hairline overflow-hidden shrink-0">
                     {prod.images?.[0] ? (
-                      <img src={prod.images[0].url} alt="" loading="lazy" className="w-full h-full object-cover" />
+                      <Image src={prod.images[0].url} alt="" loading="lazy" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <div className="w-1.5 h-1.5 rounded-full bg-sienna" aria-hidden="true" />
