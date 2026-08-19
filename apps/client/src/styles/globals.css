@@ -1,0 +1,1407 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ---- Ivory Atelier (Light Mode) ---- */
+  --ivory: #F4F1EA;
+  --ivory-deep: #ECE7DC;
+  --bone: #E3DCCC;
+  --ink: #181410;
+  --ink-soft: #4A423A;
+  --ink-mute: #665C52;
+  --ink-faint: #8C8278; /* ~4.6:1 on ivory — WCAG AA compliant */
+  --sienna: #A34824;
+  --sienna-deep: #7F3518;
+  --hairline: rgba(24, 20, 16, 0.14);
+
+  /* RGB channels for Tailwind opacity modifiers */
+  --ivory-rgb: 244, 241, 234;
+  --ink-rgb: 24, 20, 16;
+  --sienna-rgb: 163, 72, 36;
+
+  /* ---- Spacing scale ---- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 3rem;
+  --space-xl: 6rem;
+  --space-xxl: 9rem;
+
+  --font-heading: 'Cabinet Grotesk', 'Outfit', 'Playfair Display', Georgia, -apple-system, sans-serif;
+  --font-body: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono', 'Space Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --container-max: 1440px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --ease-luxury: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --shadow-soft: 0 1px 1px rgba(24, 20, 16, 0.02), 0 8px 24px -12px rgba(24, 20, 16, 0.12);
+  --shadow-raise: 0 1px 1px rgba(24, 20, 16, 0.03), 0 20px 44px -18px rgba(24, 20, 16, 0.2);
+}
+
+/* -------------------------------------------------------------------- */
+/* Obsidian Atelier (Dark Mode) — unified luxury dark palette            */
+/* -------------------------------------------------------------------- */
+.dark,
+[data-theme="dark"],
+body.dark,
+body.theme-dark,
+.theme-dark {
+  /* ---- Obsidian Atelier (Dark Mode) ---- */
+  --ivory: #0C0A09;
+  --ivory-deep: #161412;
+  --bone: #221F1B;
+  --ink: #F5F2EB;
+  --ink-soft: #CCC5B8;
+  --ink-mute: #948D80;
+  --ink-faint: #5E584E;
+  --sienna: #C86A3E;
+  --sienna-deep: #E28A5E;
+  --hairline: rgba(245, 242, 235, 0.14);
+
+  /* RGB channels for dark mode */
+  --ivory-rgb: 12, 10, 9;
+  --ink-rgb: 245, 242, 235;
+  --sienna-rgb: 200, 106, 62;
+
+  /* Legacy surface tokens mapped seamlessly to Obsidian palette */
+  --color-bg: #0C0A09;
+  --color-surface: #161412;
+  --color-surface-high: #221F1B;
+  --color-surface-highest: #2E2A25;
+  --color-text: #F5F2EB;
+  --color-muted: #948D80;
+  --color-gold: #D4AF37;
+  --color-gold-dim: #9E832A;
+  --color-blue: #007AFF;
+  --color-blue-bright: #0EA5FF;
+  --color-danger: #E5484D;
+  --color-danger-dim: #9B2C2C;
+  --color-success: #3DD68C;
+  --color-success-dim: #1E7A4D;
+  --color-border: rgba(245, 242, 235, 0.14);
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --blur-glass: 32px;
+  --blur-glass-heavy: 64px;
+
+  background-color: var(--ivory);
+  color: var(--ink);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ivory-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-faint);
+  border-radius: 999px;
+  border: 1px solid rgba(var(--ivory-rgb), 0.4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sienna);
+}
+/* Firefox — hairline, on-brand. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-faint) var(--ivory-deep);
+}
+
+::selection {
+  background: rgba(163, 72, 36, 0.18);
+  color: var(--ink);
+  text-shadow: none;
+}
+::-moz-selection {
+  background: rgba(163, 72, 36, 0.18);
+  color: var(--ink);
+}
+
+/* Input caret — sienna, so the typing caret carries the brand on every
+   field without per-component styling. */
+input, textarea, select {
+  caret-color: var(--sienna);
+}
+
+/* Focus ring — layered sienna: a precise hairline + a soft outer bloom.
+   Reads as machined rather than browser-default. */
+:focus-visible {
+  outline: 1.5px solid var(--sienna);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(163, 72, 36, 0.14);
+}
+
+/* Hide the native cursor while the custom atelier cursor is active on
+   fine-pointer devices. Text inputs, textareas, and select elements retain
+   their native text/pointer affordance. */
+body.custom-cursor-active,
+body.custom-cursor-active *:not(input):not(textarea):not(select):not([contenteditable="true"]) {
+  cursor: none;
+}
+body.custom-cursor-active input,
+body.custom-cursor-active textarea,
+body.custom-cursor-active [contenteditable="true"] {
+  cursor: text;
+}
+body.custom-cursor-active select {
+  cursor: pointer;
+}
+
+.font-display {
+  font-family: var(--font-heading);
+  font-optical-sizing: auto;
+}
+
+.font-label-caps {
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+/* Legacy display utility aliases kept for back-compat with any leftover
+   inline class strings — they map to the atelier-display-* scale. */
+.text-display-xl,
+.text-display-lg,
+.text-headline-lg {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+.text-display-xl {
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 0.99;
+  letter-spacing: -0.025em;
+}
+.text-display-lg {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+.text-headline-lg {
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+.text-headline-md {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.25;
+  font-weight: 500;
+  font-optical-sizing: auto;
+}
+
+.text-label-caps {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Legacy dark/gold utilities — scoped; only inside a .theme-dark surface. */
+.theme-dark .glass-panel,
+body.theme-dark .glass-panel {
+  background: rgba(18, 20, 20, 0.45);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.theme-dark .gold-glow,
+body.theme-dark .gold-glow {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.parallax-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-bg {
+    background-attachment: scroll;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+  .ambient-orb {
+    animation: none !important;
+  }
+  /* Nav: progress bar stays empty, panel imagery settles instantly. */
+  .nav-progress {
+    transform: none;
+    will-change: auto;
+  }
+  .mega-panel-featured img,
+  .mega-panel-featured:hover img {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .atelier-bg-scrolled {
+    background-color: var(--ivory) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .atelier-bg-default {
+    background-color: var(--ivory-deep) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .glass-refraction {
+    background: var(--ivory) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .glass-refraction-dark {
+    background: var(--ink) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .atelier-scrim {
+    background-color: rgba(var(--ink-rgb), 0.82) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Drag-to-dismiss panels (cart, mobile menu) — hint the compositor that
+   transform + opacity will animate during the gesture so the panel stays
+   on its own layer. Added only while mounted; removed by the panel's own
+   exit animation so the layer is released after the sheet leaves. */
+.atelier-sheet {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* ------------------------------------------------------------------ */
+/* Navigation scroll-state — driven by data-scrolled attribute.        */
+/* The wrapper's padding condenses instantly (no transition — padding  */
+/* animation is layout-thrash); the inner surface settles with         */
+/* background/border/shadow, which are paint-compositor friendly.      */
+/* ------------------------------------------------------------------ */
+.nav-scrolled {
+  padding-block: 0.75rem;
+}
+.nav-scrolled[data-scrolled='true'] {
+  padding-block: 0.5rem;
+}
+.nav-scrolled-inner {
+  background-color: rgba(var(--ivory-rgb), 0.82);
+  border: 1px solid rgba(var(--ink-rgb), 0.08);
+  box-shadow: 0 4px 20px -2px rgba(var(--ink-rgb), 0.04);
+  transition:
+    background-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-scrolled[data-scrolled='true'] .nav-scrolled-inner {
+  background-color: rgba(var(--ivory-rgb), 0.94);
+  border-color: rgba(var(--ink-rgb), 0.14);
+  box-shadow: 0 10px 30px -4px rgba(var(--ink-rgb), 0.08), 0 2px 6px -1px rgba(var(--ink-rgb), 0.04);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav-scrolled-inner {
+    background-color: var(--ivory) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Nav scroll-progress — thin sienna hairline that fills with page      */
+/* scroll. Driven via transform: scaleX (compositor-only) from JS.      */
+/* ------------------------------------------------------------------ */
+.nav-progress {
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mega-menu panels (desktop dropdowns)                                */
+/* ------------------------------------------------------------------ */
+.mega-panel {
+  background-color: var(--ivory);
+  border: 1px solid var(--hairline);
+  border-top-color: rgba(163, 72, 36, 0.45);
+  border-radius: 2px;
+  box-shadow: 0 24px 48px -16px rgba(24, 20, 16, 0.18);
+  /* No backdrop-filter here — the header already owns the glass layer;
+     stacking a second blur over it creates a nested compositing context. */
+}
+
+/* Panel link: mono-uppercase row with the shared ink→sienna hover. */
+.mega-panel-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  transition: color 0.2s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mega-panel-link:hover {
+    color: var(--sienna);
+  }
+}
+
+/* Panel column heading — same rhythm as the footer's column headers. */
+.mega-panel-heading {
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Featured frame — hairline + bone ground, image settles on hover. */
+.mega-panel-featured {
+  border: 1px solid var(--hairline);
+  background: var(--bone);
+  overflow: hidden;
+}
+.mega-panel-featured img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mega-panel-featured:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Craft layer: tactile press, underline sweep, sheen, image reveal    */
+/* ------------------------------------------------------------------ */
+
+/* Tactile press — apply to buttons/links via the .pressable utility. */
+.pressable {
+  /* Only transform + opacity are compositor-friendly. `filter` triggers
+     paint on every frame during transition — replaced with opacity
+     on the .transitioning modifier below. */
+  transition: transform 0.16s var(--ease-luxury), opacity 0.18s ease;
+  touch-action: manipulation;
+  user-select: none;
+}
+/* Tactile press on :active only — :focus-visible keeps the sienna ring
+   (scaling on focus conflates two feedback systems). */
+.pressable:active {
+  transform: scale(0.97);
+}
+.pressable.transitioning {
+  /* Use opacity + a tiny scale for the route-transition dim, instead of
+     filter:blur — blur is paint-heavy and not interruptible cheaply. */
+  opacity: 0.7;
+  transform: scale(0.995);
+}
+
+/* Liquid Glass Refraction — Emil Design Eng & Taste-v1 */
+.glass-refraction {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+}
+
+.glass-refraction-dark {
+  background: rgba(var(--ink-rgb), 0.45);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(24, 20, 16, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+/* Nav/footer link: sienna underline that sweeps in from the left. */
+.link-sweep {
+  position: relative;
+}
+.link-sweep::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--sienna);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.2s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link-sweep:hover::after,
+  .link-sweep:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+.link-sweep[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* Primary CTA sheen — a soft light sweep crosses the button on hover. */
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-sheen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-130%) skewX(-12deg);
+  transition: transform 0.7s var(--ease-luxury);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-sheen:hover::before {
+    transform: translateX(130%) skewX(-12deg);
+  }
+}
+
+/* Image sheen — same treatment for imagery containers (product cards,
+   category tiles). Subtler than the button sheen. */
+.img-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.img-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 65%
+  );
+  transform: translateX(-140%) skewX(-10deg);
+  transition: transform 0.9s var(--ease-luxury);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .img-sheen:hover::after {
+    transform: translateX(140%) skewX(-10deg);
+  }
+}
+
+/* Image reveal — wraps imagery; the inner element fades+settles in when
+   the parent receives .is-revealed (or when used with framer's whileInView).
+   Scale starts at 1.04, never below 1, so nothing pops from scale(0). */
+.img-reveal > * {
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 0.9s var(--ease-luxury),
+    transform 0.7s var(--ease-luxury);
+  will-change: opacity, transform;
+}
+.img-reveal.is-revealed > * {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Card lift — gentle rise + deeper shadow on pointer hover. */
+.card-lift {
+  transition:
+    transform 0.25s var(--ease-luxury),
+    box-shadow 0.25s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable:active {
+    transform: none;
+  }
+  .link-sweep::after {
+    transition: none;
+  }
+  .btn-sheen::before,
+  .img-sheen::after {
+    display: none;
+  }
+  .img-reveal > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card-lift,
+  .card-lift:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* FluidGrid — Apple-style focus dim ("environment attention").        */
+/* When one card is hovered/focused, its siblings dim slightly so the  */
+/* board reads as a single instrument. The dim lives on the card's     */
+/* direct child (framer-motion owns opacity on the wrapper for the     */
+/* entrance cascade, so the stylesheet would lose that fight) — the    */
+/* child layer is untouched by JS and dims cleanly.                    */
+/* ------------------------------------------------------------------ */
+.fluid-grid-item > * {
+  transition: opacity 0.7s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fluid-grid:hover .fluid-grid-item > * {
+    opacity: 0.55;
+  }
+  .fluid-grid .fluid-grid-item:hover > *,
+  .fluid-grid .fluid-grid-item:focus-within > * {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fluid-grid-item > * {
+    transition: none;
+  }
+}
+
+.container-void {
+  width: min(100% - 2.5rem, var(--container-max));
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .container-void {
+    width: min(100% - 4rem, var(--container-max));
+  }
+}
+
+@media (min-width: 1600px) {
+  .container-void {
+    width: min(100% - 8rem, var(--container-max));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 3-Tier Section Spacing System                                       */
+/* Standard (.section-gap), Large (.section-gap-lg), Small (.section-  */
+/* gap-sm). Every section on the landing page MUST use one of these    */
+/* three. No ad-hoc py-* on sections.                                 */
+/* ------------------------------------------------------------------ */
+.section-gap {
+  padding-block: 3.5rem;
+}
+@media (min-width: 768px) {
+  .section-gap {
+    padding-block: 5rem;
+  }
+}
+
+.section-gap-lg {
+  padding-block: 5rem;
+}
+@media (min-width: 768px) {
+  .section-gap-lg {
+    padding-block: 7rem;
+  }
+}
+
+.section-gap-sm {
+  padding-block: 2rem;
+}
+@media (min-width: 768px) {
+  .section-gap-sm {
+    padding-block: 3rem;
+  }
+}
+
+.measure { max-width: 65ch; }
+.measure-sm { max-width: 48ch; }
+
+.r3f-canvas {
+  position: absolute !important;
+  inset: 0;
+  pointer-events: none;
+}
+
+.r3f-canvas canvas {
+  display: block;
+}
+
+/* ------------------------------------------------------------------ */
+/* Ivory Atelier — editorial landing-page utilities                    */
+/* ------------------------------------------------------------------ */
+
+.atelier-bg { background-color: var(--ivory); }
+.atelier-bg-deep { background-color: var(--ivory-deep); }
+.atelier-ink { background-color: var(--ink); }
+
+/* Editorial modal scrim — a soft dim that pushes the page back without
+   crushing it. Used by CartDrawer, MobileMenu, SearchPanel and any other
+   full-overlay surface so every dialog reads as the same material layer.
+   Translucent ink on the ivory ground = perceptual hierarchy without
+   stealing focus, per Apple WWDC "Materials & depth" guidance. */
+.atelier-scrim {
+  background-color: rgba(var(--ink-rgb), 0.4);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .atelier-scrim {
+    background-color: rgba(var(--ink-rgb), 0.82);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+.text-ink { color: var(--ink); }
+.text-ink-soft { color: var(--ink-soft); }
+.text-ink-mute { color: var(--ink-mute); }
+.text-ink-faint { color: var(--ink-faint); }
+.text-sienna { color: var(--sienna); }
+.text-ivory { color: var(--ivory); }
+.bg-sienna { background-color: var(--sienna); }
+.border-hairline { border-color: var(--hairline); }
+
+/* ------------------------------------------------------------------ */
+/* Atelier Display Scale — single source of truth for editorial H1/H2.  */
+/* Three sizes (xl/lg/md), all with optical sizing on, tight tracking   */
+/* for large text, italic emphasis via <em>. Italic descender clearance  */
+/* is handled by `pb-1` reserve on the wrapper element.                  */
+/* ------------------------------------------------------------------ */
+.atelier-display {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+.atelier-display-xl {
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 0.99;
+  letter-spacing: -0.035em;
+}
+.atelier-display-lg {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+}
+.atelier-display-md {
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+.atelier-display em {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--sienna);
+}
+
+/* Mono eyebrow / index label. */
+.atelier-eyebrow {
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Hairline rule. */
+.atelier-rule {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 0;
+}
+
+/* Editorial underline sweep (ink, not gold). */
+.atelier-link {
+  position: relative;
+}
+.atelier-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--sienna);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-link:hover::after,
+  .atelier-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Primary button: solid ink block that inverts to sienna on hover. */
+.atelier-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 1rem 1.9rem;
+  min-height: 48px;
+  border: 1px solid var(--ink);
+  transition: background-color 0.3s var(--ease-luxury), color 0.3s var(--ease-luxury), border-color 0.3s var(--ease-luxury), transform 0.18s var(--ease-luxury);
+}
+.atelier-btn:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .atelier-btn:hover {
+    background: var(--sienna);
+    border-color: var(--sienna);
+    color: var(--ivory);
+  }
+}
+
+/* Ghost button: hairline outline, fills with ink on hover. */
+.atelier-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: var(--ink);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 1rem 1.9rem;
+  min-height: 48px;
+  border: 1px solid var(--ink);
+  transition: background-color 0.3s var(--ease-luxury), color 0.3s var(--ease-luxury), transform 0.18s var(--ease-luxury);
+}
+.atelier-btn-ghost:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .atelier-btn-ghost:hover {
+    background: var(--ink);
+    color: var(--ivory);
+  }
+}
+
+/* Inverse button: transparent ground + ivory text for dark/image sections. */
+.atelier-btn-inverse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: var(--ivory);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 1rem 1.9rem;
+  min-height: 48px;
+  border: 1px solid rgba(244, 241, 234, 0.6);
+  transition: background-color 0.3s var(--ease-luxury), color 0.3s var(--ease-luxury), border-color 0.3s var(--ease-luxury), transform 0.18s var(--ease-luxury);
+}
+.atelier-btn-inverse:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .atelier-btn-inverse:hover {
+    background: var(--ivory);
+    border-color: var(--ivory);
+    color: var(--ink);
+  }
+}
+
+/* Editorial image frame — hairline border, image settles in. */
+.atelier-frame {
+  border: 1px solid var(--hairline);
+  background: var(--bone);
+  overflow: hidden;
+}
+.atelier-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-frame-hover img {
+    transition: transform 0.25s var(--ease-luxury);
+  }
+  .atelier-frame-hover:hover img {
+    transition: transform 0.25s var(--ease-luxury);
+    transform: scale(1.03);
+  }
+  .atelier-frame-hover:active img {
+    transform: scale(0.98);
+  }
+}
+
+/* Specification ledger cell — lifts to the deep-ivory band on hover. */
+.atelier-ledger-cell {
+  transition: background-color 0.3s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-ledger-cell:hover {
+    background-color: var(--ivory-deep);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-btn,
+  .atelier-btn-ghost,
+  .atelier-btn-inverse { transition: none; }
+  .atelier-btn:active,
+  .atelier-btn-ghost:active,
+  .atelier-btn-inverse:active { transform: none; }
+  .atelier-link::after { transition: none; }
+  .atelier-frame-hover img,
+  .atelier-frame-hover:hover img { transition: none; transform: none; }
+  .atelier-ledger-cell { transition: none; }
+}
+
+/* ------------------------------------------------------------------ */
+/* High-End Visual Design & Doppelrand (Nested Bezel) Architecture   */
+/* ------------------------------------------------------------------ */
+
+.bezel-outer {
+  border-radius: 1.75rem;
+  padding: 0.5rem;
+  background-color: rgba(var(--ink-rgb), 0.035);
+  border: 1px solid var(--hairline);
+  transition: background-color 0.25s var(--ease-fluid), border-color 0.25s var(--ease-fluid), box-shadow 0.25s var(--ease-fluid);
+}
+
+.dark .bezel-outer,
+[data-theme="dark"] .bezel-outer {
+  background-color: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bezel-inner {
+  border-radius: calc(1.75rem - 0.5rem);
+  background-color: var(--ivory);
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 12px 32px -12px rgba(24, 20, 16, 0.08);
+  transition: box-shadow 0.4s var(--ease-fluid), border-color 0.4s var(--ease-fluid);
+}
+
+.dark .bezel-inner,
+[data-theme="dark"] .bezel-inner {
+  background-color: var(--bone);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 20px 44px -16px rgba(0, 0, 0, 0.6);
+}
+
+
+.btn-island-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  background-color: var(--ink);
+  color: var(--ivory);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.65rem 0.65rem 0.65rem 1.6rem;
+  border-radius: 9999px;
+  border: 1px solid var(--ink);
+  transition: background-color 0.3s var(--ease-luxury), border-color 0.3s var(--ease-luxury), transform 0.16s var(--ease-luxury);
+}
+.btn-island-primary:active { transform: scale(0.97); }
+
+.btn-island-primary .icon-pill {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  background-color: rgba(var(--ivory-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s var(--ease-fluid), background-color 0.4s var(--ease-fluid);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-island-primary:hover {
+    background-color: var(--sienna);
+    border-color: var(--sienna);
+  }
+  .btn-island-primary:hover .icon-pill {
+    transform: translate(2px, -1px);
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.btn-island-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  background-color: transparent;
+  color: var(--ink);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.65rem 0.65rem 0.65rem 1.6rem;
+  border-radius: 9999px;
+  border: 1px solid var(--hairline);
+  transition: background-color 0.3s var(--ease-luxury), border-color 0.3s var(--ease-luxury), transform 0.16s var(--ease-luxury);
+}
+.btn-island-ghost:active { transform: scale(0.97); }
+
+.btn-island-ghost .icon-pill {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  background-color: rgba(var(--ink-rgb), 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s var(--ease-fluid), background-color 0.4s var(--ease-fluid);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-island-ghost:hover {
+    border-color: var(--ink);
+    background-color: rgba(var(--ink-rgb), 0.04);
+  }
+  .btn-island-ghost:hover .icon-pill {
+    transform: translate(2px, -1px);
+    background-color: var(--ink);
+    color: var(--ivory);
+  }
+}
+
+/* Inverse button — for ivory CTA over a dark band (philosophy, lookbook
+   modal, editorial philosophy). Replaces ad-hoc `bg-ivory text-ink
+   border-ivory` overrides that broke the system. */
+.btn-island-inverse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  background-color: var(--ivory);
+  color: var(--ink);
+  border: 1px solid var(--ivory);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.65rem 0.65rem 0.65rem 1.6rem;
+  border-radius: 9999px;
+  transition:
+    background-color 0.3s var(--ease-luxury),
+    border-color 0.3s var(--ease-luxury),
+    color 0.3s var(--ease-luxury),
+    transform 0.16s var(--ease-luxury);
+}
+.btn-island-inverse:active { transform: scale(0.97); }
+.btn-island-inverse .icon-pill {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  background-color: var(--ink);
+  color: var(--ivory);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s var(--ease-fluid), background-color 0.4s var(--ease-fluid);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-island-inverse:hover {
+    background-color: var(--ivory-deep);
+    border-color: var(--ivory-deep);
+  }
+  .btn-island-inverse:hover .icon-pill {
+    transform: translate(2px, -1px);
+    background-color: var(--sienna);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Cinematic landing-page utilities (Apple × Emil × Taste × GPT)      */
+/* ------------------------------------------------------------------ */
+
+/* Infinite horizontal marquee — pure CSS, no JS, GPU-accelerated.
+   Separated from component tree per Taste-v1 performance rules. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 40s linear infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+}
+@keyframes marquee-scroll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer-sweep { animation: none; }
+}
+
+/* Ambient orb — slow figure-8 drift via CSS keyframes. Replaces the JS
+   motion-value animation with a compositor-only transform. Two parallel
+   animations on x and y give the same perceived motion at zero JS cost. */
+.ambient-orb {
+  background: radial-gradient(ellipse at top, rgba(163, 72, 36, 0.08) 0%, transparent 60%);
+  will-change: transform;
+}
+@keyframes ambient-orb-x {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(20px, 0, 0); }
+  50% { transform: translate3d(0, 0, 0); }
+  75% { transform: translate3d(-20px, 0, 0); }
+}
+@keyframes ambient-orb-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(0, -30px, 0); }
+  50% { transform: translate3d(0, 0, 0); }
+  75% { transform: translate3d(0, 30px, 0); }
+}
+.ambient-orb {
+  animation:
+    ambient-orb-x 16s cubic-bezier(0.45, 0, 0.55, 1) infinite,
+    ambient-orb-y 12s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb { animation: none; }
+}
+
+/* Editorial image filter — grayscale + mild warm duotone so the current
+   (byte-identical placeholder) lookbook photos still read as distinct tiles,
+   and as art-directed monochrome once real photography lands.
+   GPT-Taste: "Apply sophisticated CSS filters." */
+.img-editorial {
+  filter: grayscale(0.3) contrast(1.1) sepia(0.12);
+  transition: filter 0.7s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .img-editorial:hover {
+    filter: grayscale(0) contrast(1) sepia(0);
+  }
+}
+
+/* Word reveal utility — initial clip for staggered text animation. */
+.word-reveal-mask {
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fluid depth utilities — stereoscopic parallax + grain-on-image      */
+/* ------------------------------------------------------------------ */
+
+/* Grain-on-image — fine turbulence overlay for imagery. Applied to a
+   wrapper; the ::after sits above the image, opacity at perception
+   threshold so the texture reads as film grain, not noise. */
+.img-grain {
+  position: relative;
+}
+.img-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+/* Scroll-progress hairline — transform-only, safe under Lenis. */
+.home-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--sienna);
+  z-index: 65;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-grain::after {
+    opacity: 0.03;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Craft Layer — physical material, machined detail.                   */
+/* Elevates cards/summaries onto a bone-inlaid tray, gives inputs a    */
+/* recessed seat, and finishes dark bands with an inner hairline.      */
+/* ------------------------------------------------------------------ */
+
+/* Raised surface — a hairline bezel sitting on a faint bone tray with
+   a warm diffused shadow. The "tray" tint gives the card physical
+   depth without a hard drop shadow. */
+.atelier-card {
+  position: relative;
+  background: var(--ivory);
+  border: 1px solid var(--hairline);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    var(--shadow-soft);
+  transition:
+    box-shadow 0.3s var(--ease-luxury),
+    border-color 0.3s var(--ease-luxury);
+}
+.atelier-card-hover {
+  transition:
+    box-shadow 0.35s var(--ease-luxury),
+    border-color 0.35s var(--ease-luxury),
+    transform 0.35s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-card-hover:hover {
+    border-color: rgba(163, 72, 36, 0.35);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      var(--shadow-raise);
+    transform: translateY(-2px);
+  }
+}
+
+/* Seat — an inset seat for an input or row: a recessed bone well with
+   an inner shadow and a hairline rim. The "field" is darker than the
+   page, the reverse of a raised card. */
+.atelier-seat {
+  background-color: rgba(24, 20, 16, 0.025);
+  border: 1px solid rgba(24, 20, 16, 0.12);
+  box-shadow: inset 0 1px 2px rgba(24, 20, 16, 0.06);
+  transition:
+    border-color 0.25s var(--ease-luxury),
+    box-shadow 0.25s var(--ease-luxury),
+    background-color 0.25s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-seat:hover {
+    border-color: rgba(24, 20, 16, 0.22);
+    background-color: rgba(24, 20, 16, 0.035);
+  }
+}
+.atelier-seat:focus-within,
+.atelier-seat:focus {
+  border-color: var(--sienna);
+  box-shadow:
+    inset 0 1px 2px rgba(24, 20, 16, 0.06),
+    0 0 0 3px rgba(163, 72, 36, 0.12);
+  outline: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Atelier Input — standardized form input built on the seat material.  */
+/* Use on <input>, <textarea>. Includes focus ring, hover lift, and     */
+/* dark-mode adaptation via CSS variables.                              */
+/* ------------------------------------------------------------------ */
+.atelier-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(var(--ink-rgb), 0.025);
+  border: 1px solid rgba(var(--ink-rgb), 0.12);
+  border-radius: 0.75rem;
+  box-shadow: inset 0 1px 2px rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition:
+    border-color 0.25s var(--ease-luxury),
+    box-shadow 0.25s var(--ease-luxury),
+    background-color 0.25s var(--ease-luxury);
+}
+.atelier-input::placeholder {
+  color: var(--ink-mute);
+  opacity: 0.5;
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-input:hover {
+    border-color: rgba(var(--ink-rgb), 0.22);
+    background-color: rgba(var(--ink-rgb), 0.035);
+  }
+}
+.atelier-input:focus {
+  border-color: var(--sienna);
+  box-shadow:
+    inset 0 1px 2px rgba(var(--ink-rgb), 0.06),
+    0 0 0 3px rgba(var(--sienna-rgb), 0.12);
+  outline: none;
+}
+.atelier-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Atelier Select — styled dropdown matching .atelier-input but with    */
+/* select-specific affordances (custom chevron, pointer cursor).         */
+.atelier-select {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  appearance: none;
+  background-color: rgba(var(--ink-rgb), 0.025);
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234A423A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  border: 1px solid rgba(var(--ink-rgb), 0.12);
+  border-radius: 0.75rem;
+  box-shadow: inset 0 1px 2px rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    border-color 0.25s var(--ease-luxury),
+    box-shadow 0.25s var(--ease-luxury),
+    background-color 0.25s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-select:hover {
+    border-color: rgba(var(--ink-rgb), 0.22);
+    background-color: rgba(var(--ink-rgb), 0.035);
+  }
+}
+.atelier-select:focus {
+  border-color: var(--sienna);
+  box-shadow:
+    inset 0 1px 2px rgba(var(--ink-rgb), 0.06),
+    0 0 0 3px rgba(var(--sienna-rgb), 0.12);
+  outline: none;
+}
+
+/* Dark band finish — inner hairline + top edge catch-light so a solid
+   ink band still reads as a machined surface. */
+.atelier-band-dark {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.atelier-band-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(244, 241, 234, 0.1);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-card,
+  .atelier-card-hover,
+  .atelier-card-hover:hover {
+    transition: none;
+    transform: none;
+  }
+  .atelier-seat {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Film Grain — fixed, pointer-transparent. The only real background    */
+/* texture on the site; gives the ivory ground a physical paper feel.   */
+/* Perf guardrail: fixed pseudo-element, never attached to a scrolling  */
+/* container, opacity kept near the perception threshold.               */
+/* ------------------------------------------------------------------ */
+.grain-overlay::before {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  z-index: 55;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.022;
+  mix-blend-mode: multiply;
+  animation: grain-shift 1.2s steps(2) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay::before {
+    animation: none;
+  }
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(1.5%, 1%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  .img-editorial,
+  .img-editorial:hover {
+    filter: none;
+    transition: none;
+  }
+}
+

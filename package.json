@@ -1,0 +1,20 @@
+{
+  "name": "void-fashion",
+  "private": true,
+  "version": "1.0.0",
+  "description": "VOID — World-Class Luxury 3D Fashion E-Commerce",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=apps/client\" \"npm run dev --workspace=apps/server\"",
+    "dev:client": "npm run dev --workspace=apps/client",
+    "dev:server": "npm run dev --workspace=apps/server",
+    "build": "npm run build --workspace=apps/client && npm run build --workspace=apps/server",
+    "lint": "npm run lint --workspace=apps/client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
