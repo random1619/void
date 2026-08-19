@@ -12,7 +12,7 @@ const CART_TITLE_ID = 'cart-drawer-title';
 export const CART_PANEL_ID = 'cart-drawer-panel';
 
 function getItemMaxStock(item: CartItem): number {
-  const size = item.product.sizes?.find((s) => s.label === item.size);
+  const size = item.product.sizes?.find((s: any) => s.label === item.size);
   return size?.stock ?? 99;
 }
 

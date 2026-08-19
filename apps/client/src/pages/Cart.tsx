@@ -13,7 +13,7 @@ import { useSpringPress } from '../hooks/useSpringPress';
 import type { CartItem } from '../types';
 
 function getItemMaxStock(item: CartItem): number {
-  const size = item.product.sizes?.find((s) => s.label === item.size);
+  const size = item.product.sizes?.find((s: any) => s.label === item.size);
   return size?.stock ?? 99;
 }
 
