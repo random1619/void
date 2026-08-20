@@ -15,7 +15,7 @@ import { ArrowRight, ArrowUpRight, Sparkles, Shield, Clock, Compass } from 'luci
 import { Link } from 'react-router-dom';
 import { useFeaturedProducts, useNewArrivals } from '../hooks/useProducts';
 import { CategoryShowcase } from '../components/home/CategoryShowcase';
-import { AtelierEditorialScroll } from '../components/home/AtelierEditorialScroll';
+import { EditorialSlider } from '../components/home/EditorialSlider';
 import { AtelierHeritageShowcase } from '../components/home/AtelierHeritageShowcase';
 import { AtelierServicesDrawer, type ServiceType } from '../components/home/AtelierServicesDrawer';
 import { Testimonials } from '../components/home/Testimonials';
@@ -147,12 +147,27 @@ function MagneticButton({
   );
 }
 
-/* ─────────────────── Ambient Orb ─────────────────── */
+/* ─────────────────── Dynamic Ambient Atmospheric Glow ─────────────────── */
 function AmbientOrb() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 45, damping: 18 });
+  const springY = useSpring(mouseY, { stiffness: 45, damping: 18 });
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      mouseX.set((e.clientX - window.innerWidth / 2) * 0.15);
+      mouseY.set((e.clientY - window.innerHeight / 2) * 0.15);
+    };
+    window.addEventListener('mousemove', handleMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, [mouseX, mouseY]);
+
   return (
-    <div
+    <motion.div
       aria-hidden="true"
-      className="ambient-orb absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[600px] pointer-events-none z-0"
+      style={{ x: springX, y: springY }}
+      className="ambient-orb absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[640px] pointer-events-none z-0 opacity-75"
     />
   );
 }
@@ -438,6 +453,10 @@ function LivingProof({
   const series = useTransform(scrollYProgress, [0, 1], [4, 24]);
   const ateliers = useTransform(scrollYProgress, [0, 1], [2, 6]);
 
+  const editionsInt = useTransform(editions, (v) => Math.round(v));
+  const seriesInt = useTransform(series, (v) => Math.round(v));
+  const ateliersInt = useTransform(ateliers, (v) => Math.round(v));
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -486,12 +505,12 @@ function LivingProof({
           className="mt-10 grid grid-cols-3 gap-6 border-t border-hairline pt-6"
         >
           {[
-            { label: 'Numbered Editions', value: editions },
-            { label: 'Seasonal Series', value: series },
-            { label: 'Atelier Maisons', value: ateliers },
+            { label: 'Numbered Editions', value: editionsInt },
+            { label: 'Seasonal Series', value: seriesInt },
+            { label: 'Atelier Maisons', value: ateliersInt },
           ].map((stat) => (
             <div key={stat.label}>
-              <motion.span
+              <span
                 className="block font-display text-3xl md:text-4xl font-bold text-ink tabular-nums"
               >
                 {reducedMotion ? (
@@ -499,7 +518,7 @@ function LivingProof({
                 ) : (
                   <motion.span>{stat.value}</motion.span>
                 )}
-              </motion.span>
+              </span>
               <span className="mt-1 block atelier-eyebrow text-[10px] text-ink-mute">
                 {stat.label}
               </span>
@@ -815,8 +834,8 @@ export default function Home() {
       {/* 2. INFINITE MARQUEE STRIP */}
       <EditorialMarquee />
 
-      {/* 3. ATELIER EDITORIAL CHAPTERS (STICKY MANIFESTO + CHAPTER GALLERY) */}
-      <AtelierEditorialScroll />
+      {/* 3. RUNWAY & CAPSULE SHOWCASE SLIDER */}
+      <EditorialSlider />
 
       {/* 4. LIVING PROOF (VELOCITY-REACTIVE PRODUCT RAIL + STATS COUNTER) */}
       <section

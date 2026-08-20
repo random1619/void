@@ -25,6 +25,8 @@ import { ThemeToggle } from '../ui/ThemeToggle';
 import { springs } from '../../lib/motion-tokens';
 import { EASE_LUXURY } from '../../lib/animations';
 import { Image } from '../ui/Image';
+import { BrandLogo } from '../ui/BrandLogo';
+import { Tooltip } from '../ui/Tooltip';
 
 const DESKTOP_NAV_SPLIT_INDEX = 4;
 const ANNOUNCEMENT_STORAGE_KEY = 'void_announcement_dismissed';
@@ -95,32 +97,10 @@ function ActiveIndicator() {
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/* Logo — editorial wordmark with a subtle hover pulse + sienna mark    */
+/* Logo — precision geometric monogram & architectural typography       */
 /* ─────────────────────────────────────────────────────────────────── */
 function Logo() {
-  const scale = useSpring(1, { stiffness: 300, damping: 25 });
-
-  const handleEnter = () => scale.set(1.04);
-  const handleLeave = () => scale.set(1);
-
-  return (
-    <motion.div style={{ scale }} onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
-      <Link
-        to="/"
-        className="pressable font-display text-xl md:text-2xl font-bold tracking-tight text-ink hover:text-sienna transition-colors inline-flex items-baseline gap-0.5 md:gap-1 focus-visible:outline-offset-4"
-        aria-label="VOID Home"
-      >
-        <span
-          className="inline-flex items-center justify-center text-sienna"
-          aria-hidden="true"
-        >
-          <span className="text-base leading-none font-black">V</span>
-          <span className="text-[0.45em] leading-none mb-0.5">◆</span>
-        </span>
-        <span className="tracking-tight">OID</span>
-      </Link>
-    </motion.div>
-  );
+  return <BrandLogo size="md" />;
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
@@ -129,24 +109,27 @@ function Logo() {
 function ActionButton({
   onClick,
   label,
+  tooltipContent,
   children,
   badge,
 }: {
   onClick?: () => void;
   label: string;
+  tooltipContent?: React.ReactNode;
   children: React.ReactNode;
   badge?: React.ReactNode;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className="pressable relative min-w-[40px] min-h-[40px] w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
-      title={label}
-      aria-label={label}
-    >
-      {children}
-      {badge}
-    </button>
+    <Tooltip content={tooltipContent ?? label} side="bottom" sideOffset={8}>
+      <button
+        onClick={onClick}
+        className="pressable relative min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
+        aria-label={label}
+      >
+        {children}
+        {badge}
+      </button>
+    </Tooltip>
   );
 }
 
@@ -479,7 +462,7 @@ export function Navigation() {
                     aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                     aria-expanded={isMobileMenuOpen}
                     aria-controls={MOBILE_MENU_PANEL_ID}
-                    className="pressable text-ink-mute hover:text-sienna transition-colors min-w-[40px] min-h-[40px] w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--bone)] focus-visible:outline-offset-2"
+                    className="pressable text-ink-mute hover:text-sienna transition-colors min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center rounded-full hover:bg-[var(--bone)] focus-visible:outline-offset-2"
                   >
                     <Menu className="w-5 h-5" />
                   </button>
@@ -521,6 +504,12 @@ export function Navigation() {
                   <ActionButton
                     onClick={openSearch}
                     label="Search"
+                    tooltipContent={
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>Search</span>
+                        <kbd className="px-1.5 py-0.5 text-[9px] font-mono bg-[var(--bone)] text-sienna rounded border border-hairline">⌘K</kbd>
+                      </span>
+                    }
                     badge={null}
                   >
                     <Search className="w-4 h-4 md:w-4.5 md:h-4.5" />
@@ -528,38 +517,47 @@ export function Navigation() {
 
                   {isAuthenticated ? (
                     <div className="flex items-center gap-0.5">
-                      <Link
-                        to="/dashboard"
-                        className="pressable min-w-[40px] min-h-[40px] w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
-                        title={user?.name || 'Account'}
-                        aria-label={user?.name || 'Account'}
-                      >
-                        <User className="w-4 h-4 md:w-4.5 md:h-4.5" />
-                      </Link>
-                      <button
-                        onClick={() => logout()}
-                        className="pressable hidden md:flex min-w-[40px] min-h-[40px] w-9 h-9 sm:w-10 sm:h-10 items-center justify-center hover:text-sienna transition-colors rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] focus-visible:outline-offset-4"
-                        title="Sign Out"
-                        aria-label="Sign Out"
-                      >
-                        <LogOut className="w-4 h-4" />
-                      </button>
+                      <Tooltip content={user?.name || 'Client Account'} side="bottom" sideOffset={8}>
+                        <Link
+                          to="/dashboard"
+                          className="pressable min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
+                          aria-label={user?.name || 'Account'}
+                        >
+                          <User className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                        </Link>
+                      </Tooltip>
+                      <Tooltip content="Sign Out" side="bottom" sideOffset={8}>
+                        <button
+                          onClick={() => logout()}
+                          className="pressable hidden md:flex min-w-[44px] min-h-[44px] w-11 h-11 items-center justify-center hover:text-sienna transition-colors rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] focus-visible:outline-offset-4"
+                          aria-label="Sign Out"
+                        >
+                          <LogOut className="w-4 h-4" />
+                        </button>
+                      </Tooltip>
                     </div>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => openAuthPanel('login')}
-                      className="pressable min-w-[40px] min-h-[40px] w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
-                      title="Sign In"
-                      aria-label="Sign In"
-                    >
-                      <User className="w-4 h-4 md:w-4.5 md:h-4.5" />
-                    </button>
+                    <Tooltip content="Sign In / Register" side="bottom" sideOffset={8}>
+                      <button
+                        type="button"
+                        onClick={() => openAuthPanel('login')}
+                        className="pressable min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center rounded-full border border-transparent hover:border-hairline hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4"
+                        aria-label="Sign In"
+                      >
+                        <User className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                      </button>
+                    </Tooltip>
                   )}
 
                   <ActionButton
                     onClick={openCart}
                     label={`Cart, ${cartCount} item${cartCount !== 1 ? 's' : ''}`}
+                    tooltipContent={
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>Cart</span>
+                        <kbd className="px-1.5 py-0.5 text-[9px] font-mono bg-[var(--bone)] text-sienna rounded border border-hairline">⌘B</kbd>
+                      </span>
+                    }
                     badge={
                       cartCount > 0 ? (
                         <motion.span

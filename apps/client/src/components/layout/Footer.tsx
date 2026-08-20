@@ -4,10 +4,9 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { ThemeToggle } from '../ui/ThemeToggle';
-
+import { BrandLogo } from '../ui/BrandLogo';
 
 export function Footer() {
-
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -29,23 +28,22 @@ export function Footer() {
 
   return (
     <footer
-
       aria-label="Site footer"
       className="w-full atelier-bg-deep border-t border-hairline text-ink-mute relative z-content overflow-hidden"
     >
       {/* Top Footer Banner */}
       <div className="container-void py-16 grid grid-cols-1 md:grid-cols-12 gap-10">
-          <div className="md:col-span-4 flex flex-col justify-between space-y-6">
+        <div className="md:col-span-4 flex flex-col justify-between space-y-6">
           <div>
-            <Link to="/" className="font-display text-4xl text-ink tracking-tighter block mb-4 hover:text-sienna transition-colors focus-visible:outline-offset-2" aria-label="VOID Home">
-              VOID
-            </Link>
+            <div className="mb-4">
+              <BrandLogo size="lg" />
+            </div>
             <p className="text-sm text-ink-mute leading-relaxed max-w-xs font-light">
               Architectural silhouettes and avant-garde luxury fashion engineered with obsessive Japanese and Italian craftsmanship.
             </p>
           </div>
 
-          <p className="text-xs text-ink-mute/70 font-light">
+          <p className="text-xs text-ink-mute font-light">
             © {new Date().getFullYear()} VOID Atelier. All rights reserved.
           </p>
         </div>
@@ -62,9 +60,14 @@ export function Footer() {
           <div className="flex flex-col space-y-3">
             <span className="atelier-eyebrow text-ink mb-1">Atelier</span>
             <Link to="/about" className="link-sweep w-fit text-xs text-ink-mute">Our Story</Link>
+            <Link to="/heritage" className="link-sweep w-fit text-xs text-ink-mute">Heritage</Link>
+            <Link to="/craft-atelier" className="link-sweep w-fit text-xs text-ink-mute">Craft Atelier</Link>
+            <Link to="/materials" className="link-sweep w-fit text-xs text-ink-mute">Materials Archive</Link>
+            <Link to="/the-journey" className="link-sweep w-fit text-xs text-ink-mute">The Journey</Link>
             <Link to="/collections" className="link-sweep w-fit text-xs text-ink-mute">Past Seasons</Link>
             <Link to="/new-arrivals" className="link-sweep w-fit text-xs text-ink-mute">New Arrivals</Link>
             <Link to="/stores" className="link-sweep w-fit text-xs text-ink-mute">The Maisons</Link>
+            <Link to="/maisons" className="link-sweep w-fit text-xs text-ink-mute">Flagship Maisons</Link>
             <Link to="/loyalty" className="link-sweep w-fit text-xs text-ink-mute">Loyalty Program</Link>
             <Link to="/gift-cards" className="link-sweep w-fit text-xs text-ink-mute">Gift Cards</Link>
             <Link to="/contact" className="link-sweep w-fit text-xs text-ink-mute">Contact</Link>
@@ -112,7 +115,7 @@ export function Footer() {
             </motion.div>
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-hairline/60">
-              <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] uppercase tracking-widest text-ink-mute/70">
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] uppercase tracking-widest text-ink-mute">
                 <Link to="/privacy" className="link-sweep w-fit">Privacy Policy</Link>
                 <Link to="/terms" className="link-sweep w-fit">Terms of Service</Link>
                 <Link to="/shipping" className="link-sweep w-fit">Shipping & Returns</Link>

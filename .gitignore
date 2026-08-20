@@ -78,8 +78,8 @@ lookbook-*.png
 verify-*.png
 
 # Temporary Scratch Scripts
-fix-*.py
-fix-*.ps1
+*.py
+*.ps1
 
 # AI Agents & Automation Artifacts
 .agents/
@@ -107,6 +107,10 @@ graphify-out/
 apps/graphify-out/
 skills-lock.json
 .design-brief.md
+PRODUCT.md
+**/PRODUCT.md
+*.prompt
+*.prompt.md
 
 # OS & IDE Files
 .DS_Store

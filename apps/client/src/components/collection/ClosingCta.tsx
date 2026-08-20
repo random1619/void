@@ -77,7 +77,7 @@ export function ClosingCta() {
     <section className="relative min-h-[70vh] flex items-center justify-center atelier-ink text-ivory overflow-hidden">
       <div className="absolute inset-0" aria-hidden="true">
         <Image
-          src="/lookbook-4-alt.png"
+          src="/cta_closing_bg.png"
           alt=""
           loading="lazy"
           decoding="async"

@@ -224,7 +224,7 @@ export default function Shipping() {
                       <X className="w-4 h-4" aria-hidden="true" />
                     </span>
                   )}
-                  <p className={`text-sm leading-relaxed font-light ${rule.included ? 'text-ink-soft' : 'text-ink-mute/70'}`}>
+                  <p className={`text-sm leading-relaxed font-light ${rule.included ? 'text-ink-soft' : 'text-ink-mute'}`}>
                     {rule.text}
                   </p>
                 </div>

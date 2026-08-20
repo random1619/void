@@ -29,7 +29,7 @@ const HERITAGE_STEPS: Step[] = [
     description:
       'Before a single meter of wool is cut, each garment is drafted as an architectural structure. We balance high-density structured shoulders with natural fluid drape, calibrated down to the millimeter.',
     icon: Compass,
-    image: '/chapter_one_silhouettes.jpg',
+    image: '/heritage_phase_01_pattern.jpg',
     tag: 'Phase I · Pattern Lab',
     link: '/collections',
     linkText: 'Explore Tailoring',
@@ -47,7 +47,7 @@ const HERITAGE_STEPS: Step[] = [
     description:
       'We partner with multi-generational heritage mills in Owari and Piedmont. Sourcing ultra-fine 17.5-micron virgin merinos and hand-spun raw mulberry silks, woven on slow vintage shuttle looms.',
     icon: Scissors,
-    image: '/chapter_three_matter.jpg',
+    image: '/heritage_phase_02_matter.jpg',
     tag: 'Phase II · Raw Matter',
     link: '/products',
     linkText: 'Discover Textiles',
@@ -65,7 +65,7 @@ const HERITAGE_STEPS: Step[] = [
     description:
       'Our timepiece cases are milled from single blocks of aerospace Grade 5 titanium, hand-beveled with diamond compound paste and fitted with double-domed anti-reflective sapphire crystals.',
     icon: Watch,
-    image: '/chapter_two_metallurgy.jpg',
+    image: '/heritage_phase_03_titanium.jpg',
     tag: 'Phase III · Metallurgy',
     link: '/watch',
     linkText: 'Configure Horology',
@@ -83,7 +83,7 @@ const HERITAGE_STEPS: Step[] = [
     description:
       'Every creation that leaves the atelier is engraved with its individual serial number and recorded in our permanent master ledger, guaranteeing exclusivity in strictly limited runs of fifty.',
     icon: FileCheck2,
-    image: '/lookbook_look_01_drape.jpg',
+    image: '/heritage_serialization.jpg',
     tag: 'Phase IV · Archival Proof',
     link: '/about',
     linkText: 'Read Master Ledger',
@@ -133,7 +133,7 @@ export function AtelierHeritageShowcase() {
                 key={step.id}
                 type="button"
                 onClick={() => setActiveStepIdx(idx)}
-                className={`group relative p-5 rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between min-h-[140px] ${
+                className={`group relative p-5 rounded-2xl border text-left transition-[background-color,border-color,box-shadow] duration-300 flex flex-col justify-between min-h-[140px] ${
                   isActive
                     ? 'atelier-bg-deep border-sienna shadow-[0_4px_24px_rgba(163,72,36,0.12)]'
                     : 'atelier-bg border-hairline hover:border-sienna/40 hover:bg-bone/30'
@@ -164,7 +164,7 @@ export function AtelierHeritageShowcase() {
                   >
                     {step.title.split(' ')[0]} {step.title.split(' ')[1]}
                   </h4>
-                  <span className="font-mono text-[10px] text-ink-mute/70 uppercase tracking-wider block mt-0.5">
+                  <span className="font-mono text-[10px] text-ink-mute uppercase tracking-wider block mt-0.5">
                     {step.tag.split('· ')[1]}
                   </span>
                 </div>

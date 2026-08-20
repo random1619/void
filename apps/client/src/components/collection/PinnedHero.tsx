@@ -22,7 +22,7 @@ export function PinnedHero() {
       {/* Cinematic background layer */}
       <div ref={imageRef} className="absolute inset-0 will-change-transform" aria-hidden="true">
         <Image
-          src="/lookbook-1-alt.png"
+          src="/pinned_hero_drape.png"
           alt=""
           loading="eager"
           decoding="async"

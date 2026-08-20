@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useSpring, animate } from 'framer-motion';
 import { ArrowRight, LayoutGrid, Rows3 } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
@@ -9,6 +9,8 @@ import { FilterBar } from '../components/product/FilterBar';
 import { springs } from '../lib/motion-tokens';
 import { useMagnetic } from '../hooks/useMagnetic';
 import { useSpringPress } from '../hooks/useSpringPress';
+import { useProductFilters } from '../hooks/useProductFilters';
+import { Tooltip } from '../components/ui/Tooltip';
 import type { ProductFilters, Product } from '../types';
 import { Image } from '../components/ui/Image';
 
@@ -54,24 +56,26 @@ function ViewToggle({
   const press = useSpringPress({ scale: 0.94 });
 
   return (
-    <motion.button
-      ref={magnetic.ref as React.RefObject<HTMLButtonElement>}
-      style={{ ...magnetic.style, ...press.style }}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={(e) => { magnetic.onPointerLeave(); press.onPointerLeave?.(e); }}
-      onPointerDown={press.onPointerDown}
-      onPointerUp={press.onPointerUp}
-      onPointerCancel={press.onPointerCancel}
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      aria-label={label}
-      className={`flex items-center justify-center w-[44px] h-[44px] transition-colors focus-visible:outline-offset-2 ${
-        active ? 'bg-[var(--ink)] text-[var(--ivory)]' : 'text-ink-mute hover:text-ink'
-      }`}
-    >
-      <Icon className="w-4 h-4" aria-hidden="true" />
-    </motion.button>
+    <Tooltip content={label} side="top" sideOffset={6}>
+      <motion.button
+        ref={magnetic.ref as React.RefObject<HTMLButtonElement>}
+        style={{ ...magnetic.style, ...press.style }}
+        onPointerMove={magnetic.onPointerMove}
+        onPointerLeave={(e) => { magnetic.onPointerLeave(); press.onPointerLeave?.(e); }}
+        onPointerDown={press.onPointerDown}
+        onPointerUp={press.onPointerUp}
+        onPointerCancel={press.onPointerCancel}
+        type="button"
+        onClick={onClick}
+        aria-pressed={active}
+        aria-label={label}
+        className={`flex items-center justify-center w-[44px] h-[44px] transition-colors focus-visible:outline-offset-2 ${
+          active ? 'bg-[var(--ink)] text-[var(--ivory)]' : 'text-ink-mute hover:text-ink'
+        }`}
+      >
+        <Icon className="w-4 h-4" aria-hidden="true" />
+      </motion.button>
+    </Tooltip>
   );
 }
 
@@ -147,58 +151,29 @@ function ShimmerSkeleton() {
 }
 
 export default function Products() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { filters, updateFilter, clearAllFilters } = useProductFilters();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [view, setView] = useState<ViewMode>('grid');
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
-  const filters = useMemo<ProductFilters>(() => ({
-    category: searchParams.get('category') || undefined,
-    brand: searchParams.get('brand') || undefined,
-    minPrice: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
-    maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
-    sizes: searchParams.get('sizes')?.split(',').filter(Boolean) || undefined,
-    featured: searchParams.get('featured') === 'true' || undefined,
-    isNew: searchParams.get('isNew') === 'true' || undefined,
-    onSale: searchParams.get('onSale') === 'true' || undefined,
-    search: searchParams.get('search') || undefined,
-    sortBy: (searchParams.get('sortBy') as ProductFilters['sortBy']) || 'newest',
-  }), [searchParams]);
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useProducts(filters);
 
   const products = data?.pages.flatMap((page) => page.data) ?? [];
-
-  const updateFilter = useCallback(
-    (key: string, value: string | undefined) => {
-      setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        if (value) next.set(key, value);
-        else next.delete(key);
-        return next;
-      });
-    },
-    [setSearchParams]
-  );
-
-  const clearAllFilters = useCallback(() => {
-    setSearchParams(new URLSearchParams());
-  }, [setSearchParams]);
 
   // Active filter chips, computed once. The `key` makes the list stable so
   // an unmounting chip doesn't re-mount the same one next to it.
   const activeFilterChips = useMemo(() => {
     const chips: { key: string; label: string; clear: () => void }[] = [];
-    if (filters.category) chips.push({ key: `cat-${filters.category}`, label: filters.category, clear: () => updateFilter('category', undefined) });
-    if (filters.brand) chips.push({ key: `brand-${filters.brand}`, label: filters.brand, clear: () => updateFilter('brand', undefined) });
-    filters.sizes?.forEach((s) => chips.push({ key: `size-${s}`, label: `Size ${s}`, clear: () => updateFilter('sizes', filters.sizes!.filter((x) => x !== s).join(',') || undefined) }));
-    if (filters.minPrice) chips.push({ key: 'min', label: `Min $${filters.minPrice}`, clear: () => updateFilter('minPrice', undefined) });
-    if (filters.maxPrice) chips.push({ key: 'max', label: `Max $${filters.maxPrice}`, clear: () => updateFilter('maxPrice', undefined) });
-    if (filters.onSale) chips.push({ key: 'sale', label: 'On Sale', clear: () => updateFilter('onSale', undefined) });
-    if (filters.featured) chips.push({ key: 'feat', label: 'Featured', clear: () => updateFilter('featured', undefined) });
-    if (filters.isNew) chips.push({ key: 'new', label: 'New Arrivals', clear: () => updateFilter('isNew', undefined) });
-    if (filters.search) chips.push({ key: 'q', label: `"${filters.search}"`, clear: () => updateFilter('search', undefined) });
+    if (filters.category) chips.push({ key: `cat-${filters.category}`, label: filters.category, clear: () => updateFilter('category', null) });
+    if (filters.brand) chips.push({ key: `brand-${filters.brand}`, label: filters.brand, clear: () => updateFilter('brand', null) });
+    filters.sizes?.forEach((s) => chips.push({ key: `size-${s}`, label: `Size ${s}`, clear: () => updateFilter('sizes', filters.sizes!.filter((x) => x !== s)) }));
+    if (filters.minPrice) chips.push({ key: 'min', label: `Min $${filters.minPrice}`, clear: () => updateFilter('minPrice', null) });
+    if (filters.maxPrice) chips.push({ key: 'max', label: `Max $${filters.maxPrice}`, clear: () => updateFilter('maxPrice', null) });
+    if (filters.onSale) chips.push({ key: 'sale', label: 'On Sale', clear: () => updateFilter('onSale', null) });
+    if (filters.featured) chips.push({ key: 'feat', label: 'Featured', clear: () => updateFilter('featured', null) });
+    if (filters.isNew) chips.push({ key: 'new', label: 'New Arrivals', clear: () => updateFilter('isNew', null) });
+    if (filters.search) chips.push({ key: 'q', label: `"${filters.search}"`, clear: () => updateFilter('search', null) });
     return chips;
   }, [filters, updateFilter]);
 
@@ -384,7 +359,7 @@ export default function Products() {
               exit={{ opacity: 0 }}
               className="py-12 flex flex-col items-center gap-3 text-ink-mute"
             >
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent animate-shimmer" />
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent bg-[length:200%_100%] animate-shimmer" />
               <span className="atelier-eyebrow">Revealing more pieces</span>
             </motion.div>
           )}
@@ -427,7 +402,7 @@ function Grid({ products }: { products: Product[] }) {
         >
           <div className="lg:col-span-5 relative aspect-[3/4] atelier-frame overflow-hidden group">
             <ParallaxCoverImage
-              src={cover.images?.[0]?.url || '/lookbook-1-alt.png'}
+              src={cover.images?.[0]?.url || '/products_fallback_cover.png'}
               alt={cover.images?.[0]?.alt || cover.name}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -578,7 +553,7 @@ function EditorialRow({ product, index }: { product: Product; index: number }) {
             ${product.price.toLocaleString()}
           </span>
           {product.comparePrice && (
-            <span className="text-ink-mute/70 line-through text-xs tabular-nums">
+            <span className="text-ink-mute line-through text-xs tabular-nums">
               ${product.comparePrice.toLocaleString()}
             </span>
           )}

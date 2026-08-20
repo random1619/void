@@ -165,7 +165,7 @@ export default function Wishlist() {
     <main className="min-h-[100dvh] atelier-bg">
       {/* Editorial Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/5 via-transparent to-atelier-bg pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/5 via-transparent to-transparent pointer-events-none" />
         <div className="container-void pt-36 pb-12 relative z-10">
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 20 }}

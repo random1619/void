@@ -25,7 +25,7 @@ export default function OrderConfirmation() {
       <div className="atelier-bg min-h-[100dvh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="atelier-eyebrow text-ink-mute tracking-widest">VOID</div>
-          <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent animate-shimmer" />
+          <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent bg-[length:200%_100%] animate-shimmer" />
         </div>
       </div>
     );
@@ -75,7 +75,7 @@ export default function OrderConfirmation() {
           <h1 className="atelier-display text-4xl sm:text-5xl">Order Confirmed</h1>
           <p className="text-ink-mute mt-3">Thank you for your purchase</p>
           <p className="text-sm text-ink-mute mt-1">Order #{order._id.slice(-8).toUpperCase()}</p>
-          <p className="text-xs text-ink-mute/70 mt-3">A confirmation has been sent to your email with these details.</p>
+          <p className="text-xs text-ink-mute mt-3">A confirmation has been sent to your email with these details.</p>
         </motion.div>
 
         <motion.div

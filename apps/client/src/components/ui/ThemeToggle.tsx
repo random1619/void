@@ -18,7 +18,7 @@ export function ThemeToggle({ className = '', showLabel = false }: ThemeTogglePr
       className={`pressable relative flex items-center justify-center rounded-full border border-transparent hover:border-[var(--hairline)] hover:bg-[var(--bone)] text-ink-mute hover:text-ink transition-colors duration-200 focus-visible:outline-offset-4 ${
         showLabel
           ? 'px-3.5 py-2 gap-2 text-xs font-mono uppercase tracking-wider'
-          : 'w-9 h-9 sm:w-10 sm:h-10'
+          : 'w-11 h-11'
       } ${className}`}
       title={isDark ? 'Switch to Ivory Light mode' : 'Switch to Obsidian Dark mode'}
       aria-label={isDark ? 'Switch to Ivory Light mode' : 'Switch to Obsidian Dark mode'}

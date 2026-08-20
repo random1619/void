@@ -12,7 +12,9 @@ import { Navigation } from './components/layout/Navigation';
 import { Footer } from './components/layout/Footer';
 import { FluidPageTransition } from './components/layout/FluidPageTransition';
 import { CursorEffect } from './components/ui/CursorEffect';
+import { CustomScroll } from './components/ui/CustomScroll';
 import { useLenis } from './hooks/useLenis';
+import { useGlobalHotkeys } from './hooks/useGlobalHotkeys';
 import { RequireAuth } from './components/auth/RequireAuth';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -33,6 +35,11 @@ const Admin = lazy(() => import('./pages/Admin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Heritage = lazy(() => import('./pages/Heritage'));
+const CraftAtelier = lazy(() => import('./pages/CraftAtelier'));
+const Materials = lazy(() => import('./pages/Materials'));
+const Maisons = lazy(() => import('./pages/Maisons'));
+const TheJourney = lazy(() => import('./pages/TheJourney'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
@@ -47,7 +54,7 @@ function PageFallback() {
     <div className="fixed inset-0 atelier-bg flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <div className="atelier-eyebrow text-ink-mute tracking-widest">VOID</div>
-        <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent animate-shimmer" />
+        <div className="w-16 h-px bg-gradient-to-r from-transparent via-sienna to-transparent bg-[length:200%_100%] animate-shimmer" />
       </div>
     </div>
   );
@@ -59,6 +66,7 @@ export default function App() {
   const { initTheme } = useThemeStore();
   
   useLenis();
+  useGlobalHotkeys();
   
   useEffect(() => {
     initTheme();
@@ -79,6 +87,7 @@ export default function App() {
       {!isAuthPage && !isAdminPage && !isCheckoutPage && <Navigation />}
       
       <CursorEffect />
+      <CustomScroll />
       <CartDrawer />
       <SearchPanel />
       <MobileMenu />
@@ -121,6 +130,11 @@ export default function App() {
               <Route path="/gift-cards" element={<GiftCards />} />
               <Route path="/loyalty" element={<Loyalty />} />
               <Route path="/stores" element={<Stores />} />
+              <Route path="/heritage" element={<Heritage />} />
+              <Route path="/craft-atelier" element={<CraftAtelier />} />
+              <Route path="/materials" element={<Materials />} />
+              <Route path="/maisons" element={<Maisons />} />
+              <Route path="/the-journey" element={<TheJourney />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

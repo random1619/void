@@ -320,7 +320,7 @@ export default function Auth() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="client@atelier.void"
-                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                     />
                   </div>
 
@@ -350,7 +350,7 @@ export default function Auth() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         placeholder="••••••••"
-                        className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl pl-3.5 pr-11 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                        className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl pl-3.5 pr-11 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                       />
                       <button
                         type="button"
@@ -436,7 +436,7 @@ export default function Auth() {
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder="Elena Rostova"
-                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                     />
                   </div>
 
@@ -457,7 +457,7 @@ export default function Auth() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="elena@atelier.void"
-                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                      className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                     />
                   </div>
 
@@ -480,7 +480,7 @@ export default function Auth() {
                         required
                         minLength={6}
                         placeholder="Min. 6 characters"
-                        className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl pl-3.5 pr-11 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                        className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl pl-3.5 pr-11 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                       />
                       <button
                         type="button"
@@ -580,7 +580,7 @@ export default function Auth() {
                           onChange={(e) => setEmail(e.target.value)}
                           required
                           placeholder="client@atelier.void"
-                          className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                          className="w-full bg-[var(--bone)]/50 dark:bg-white/5 border border-hairline rounded-xl px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                         />
                       </div>
 

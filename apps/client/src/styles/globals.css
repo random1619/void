@@ -10,7 +10,7 @@
   --ink: #181410;
   --ink-soft: #4A423A;
   --ink-mute: #665C52;
-  --ink-faint: #8C8278; /* ~4.6:1 on ivory — WCAG AA compliant */
+  --ink-faint: #8C8278; /* ~3.3:1 on ivory — large text / decorative only, not body copy */
   --sienna: #A34824;
   --sienna-deep: #7F3518;
   --hairline: rgba(24, 20, 16, 0.14);
@@ -19,6 +19,8 @@
   --ivory-rgb: 244, 241, 234;
   --ink-rgb: 24, 20, 16;
   --sienna-rgb: 163, 72, 36;
+  --bone-rgb: 227, 220, 204;
+  --ivory-deep-rgb: 236, 231, 220;
 
   /* ---- Spacing scale ---- */
   --space-xs: 0.5rem;
@@ -67,6 +69,8 @@ body.theme-dark,
   --ivory-rgb: 12, 10, 9;
   --ink-rgb: 245, 242, 235;
   --sienna-rgb: 200, 106, 62;
+  --bone-rgb: 34, 31, 27;
+  --ivory-deep-rgb: 22, 20, 18;
 
   /* Legacy surface tokens mapped seamlessly to Obsidian palette */
   --color-bg: #0C0A09;
@@ -115,24 +119,24 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--ivory-deep);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--ink-faint);
+  background: rgba(var(--ink-rgb), 0.22);
   border-radius: 999px;
-  border: 1px solid rgba(var(--ivory-rgb), 0.4);
+  transition: background-color 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--sienna);
 }
-/* Firefox — hairline, on-brand. */
+/* Firefox — hairline, on-brand */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--ink-faint) var(--ivory-deep);
+  scrollbar-color: rgba(var(--ink-rgb), 0.25) transparent;
 }
 
 ::selection {
@@ -1340,6 +1344,72 @@ body.theme-dark .gold-glow {
   outline: none;
 }
 
+/* Atelier range slider — thin hairline track, sienna thumb. Used by the
+   deconstructed-movement explode separator. Gated to fine pointers for the
+   hover state; touch uses the native control. */
+.atelier-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+.atelier-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: rgba(var(--ink-rgb), 0.18);
+  border-radius: 999px;
+}
+.atelier-range::-moz-range-track {
+  height: 2px;
+  background: rgba(var(--ink-rgb), 0.18);
+  border-radius: 999px;
+}
+.atelier-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -9px;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--ivory);
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 0 3px rgba(var(--sienna-rgb), 0.14);
+  transition: transform 0.16s var(--ease-luxury), box-shadow 0.16s var(--ease-luxury);
+}
+.atelier-range::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--ivory);
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 0 3px rgba(var(--sienna-rgb), 0.14);
+  transition: transform 0.16s var(--ease-luxury), box-shadow 0.16s var(--ease-luxury);
+}
+@media (hover: hover) and (pointer: fine) {
+  .atelier-range:hover::-webkit-slider-thumb {
+    transform: scale(1.12);
+    border-color: var(--sienna);
+    box-shadow: 0 0 0 4px rgba(var(--sienna-rgb), 0.2);
+  }
+  .atelier-range:hover::-moz-range-thumb {
+    transform: scale(1.12);
+    border-color: var(--sienna);
+    box-shadow: 0 0 0 4px rgba(var(--sienna-rgb), 0.2);
+  }
+}
+.atelier-range:focus-visible::-webkit-slider-thumb {
+  outline: 1.5px solid var(--sienna);
+  outline-offset: 3px;
+}
+.atelier-range:active::-webkit-slider-thumb {
+  transform: scale(0.94);
+}
+@media (prefers-reduced-motion: reduce) {
+  .atelier-range::-webkit-slider-thumb,
+  .atelier-range::-moz-range-thumb { transition: none; }
+}
+
 /* Dark band finish — inner hairline + top edge catch-light so a solid
    ink band still reads as a machined surface. */
 .atelier-band-dark {
@@ -1403,5 +1473,68 @@ body.theme-dark .gold-glow {
     filter: none;
     transition: none;
   }
+}
+
+/* ── Premium Polish Utilities ── */
+
+/* Smooth focus ring for interactive elements */
+*:focus-visible {
+  outline: 2px solid var(--sienna);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Tabular numeric alignment for prices */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle image grain on product images — adds texture */
+.img-grain {
+  position: relative;
+}
+.img-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cfilter id='ng'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23ng)'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+/* Smooth transition timing for all interactive cards */
+@media (hover: hover) and (pointer: fine) {
+  .atelier-card {
+    transition:
+      box-shadow 0.35s var(--ease-luxury),
+      border-color 0.35s var(--ease-luxury),
+      transform 0.25s var(--ease-luxury);
+  }
+  .atelier-card:hover {
+    box-shadow:
+      0 1px 2px rgba(24, 20, 16, 0.03),
+      0 12px 32px -12px rgba(24, 20, 16, 0.1);
+  }
+}
+
+/* Animated underline sweep for inline links */
+.link-underline-sweep {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline-sweep::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--sienna);
+  transition: width 0.35s var(--ease-luxury);
+}
+.link-underline-sweep:hover::after {
+  width: 100%;
 }
 

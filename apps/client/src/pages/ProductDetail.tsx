@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, animate } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, animate, AnimatePresence } from 'framer-motion';
 import { Heart, ShoppingBag, Minus, Plus, ChevronRight, Star, AlertCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useProduct } from '../hooks/useProducts';
@@ -17,6 +17,9 @@ import { useSpringPress } from '../hooks/useSpringPress';
 import api from '../lib/api';
 import { toast } from 'sonner';
 import { Image } from '../components/ui/Image';
+import { ImageZoom } from '../components/ui/ImageZoom';
+import { ProductImageCarousel } from '../components/product/ProductImageCarousel';
+import { Tooltip } from '../components/ui/Tooltip';
 
 /**
  * Parallax product image — the image shifts opposite to cursor movement
@@ -38,7 +41,6 @@ function ParallaxProductImage({
   const my = useMotionValue(0);
   const springX = useSpring(mx, { stiffness: 300, damping: 30, mass: 0.6 });
   const springY = useSpring(my, { stiffness: 300, damping: 30, mass: 0.6 });
-  const transform = useTransform([springX, springY], ([x, y]) => `translate(${x}px, ${y}px)`);
 
   const handlePointer = (e: React.PointerEvent) => {
     if (reducedMotion || !containerRef.current) return;
@@ -57,7 +59,7 @@ function ParallaxProductImage({
   return (
     <div
       ref={containerRef}
-      className="aspect-[3/4] atelier-frame overflow-hidden relative"
+      className="aspect-[3/4] atelier-frame overflow-hidden relative group"
       onPointerMove={handlePointer}
       onPointerLeave={reset}
     >
@@ -66,8 +68,14 @@ function ParallaxProductImage({
         alt={alt}
         fetchPriority={priority ? 'high' : 'low'}
         decoding="async"
-        className="w-[108%] h-[108%] object-cover"
-        style={{ x: reducedMotion ? 0 : transform, left: '-4%', top: '-4%' }}
+        className="w-[108%] h-[108%] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        style={{
+          x: reducedMotion ? 0 : springX,
+          y: reducedMotion ? 0 : springY,
+          left: '-4%',
+          top: '-4%',
+          position: 'absolute',
+        }}
       />
     </div>
   );
@@ -89,31 +97,35 @@ function MagneticColorSwatch({
   const press = useSpringPress({ scale: 0.9, stiffness: 500, damping: 20, mass: 0.3 });
 
   return (
-    <motion.button
-      ref={magnetic.ref as React.Ref<HTMLButtonElement>}
-      onClick={onSelect}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      onPointerDown={press.onPointerDown}
-      onPointerUp={press.onPointerUp}
-      onPointerCancel={press.onPointerCancel}
-      className="min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-offset-4"
-      aria-label={`${cw.name}${selected ? ', selected' : ''}`}
-      aria-pressed={selected}
-      title={cw.name}
-      style={{ ...magnetic.style, ...press.style }}
-    >
-      <motion.span
-        className={`block w-8 h-8 rounded-full border-2 ${selected ? 'border-[var(--ink)]' : 'border-transparent'}`}
-        animate={selected ? { scale: 1.1 } : { scale: 1 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      />
-    </motion.button>
+    <Tooltip content={cw.name} side="top" sideOffset={6}>
+      <motion.button
+        ref={magnetic.ref as React.Ref<HTMLButtonElement>}
+        onClick={onSelect}
+        onPointerMove={magnetic.onPointerMove}
+        onPointerLeave={magnetic.onPointerLeave}
+        onPointerDown={press.onPointerDown}
+        onPointerUp={press.onPointerUp}
+        onPointerCancel={press.onPointerCancel}
+        className="min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-offset-4"
+        aria-label={`${cw.name}${selected ? ', selected' : ''}`}
+        aria-pressed={selected}
+        style={{ ...magnetic.style, ...press.style }}
+      >
+        <motion.span
+          className={`block w-8 h-8 rounded-full border-2 shadow-sm ${
+            selected ? 'border-sienna ring-2 ring-sienna/30' : 'border-black/20 dark:border-white/20'
+          }`}
+          style={{ backgroundColor: cw.hex }}
+          animate={selected ? { scale: 1.15 } : { scale: 1 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        />
+      </motion.button>
+    </Tooltip>
   );
 }
 
 /**
- * Magnetic size button with spring press feedback.
+ * Magnetic size button with spring press feedback and stock tooltip.
  */
 function MagneticSizeButton({
   size,
@@ -129,30 +141,36 @@ function MagneticSizeButton({
   const magnetic = useMagnetic({ range: 4, stiffness: 400, damping: 30, mass: 0.5 });
   const press = useSpringPress({ scale: 0.93, stiffness: 400, damping: 20, mass: 0.5 });
 
+  const tooltipLabel = outOfStock
+    ? `Size ${size.label} · Sold Out`
+    : `Size ${size.label} · ${size.stock} in atelier`;
+
   return (
-    <motion.button
-      ref={magnetic.ref as React.Ref<HTMLButtonElement>}
-      onClick={onSelect}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      onPointerDown={press.onPointerDown}
-      onPointerUp={press.onPointerUp}
-      onPointerCancel={press.onPointerCancel}
-      disabled={outOfStock}
-      className={`w-12 h-12 border text-sm focus-visible:outline-offset-4 transition-colors duration-200 ${
-        selected
-          ? 'border-[var(--sienna)] bg-sienna text-ivory shadow-[0_4px_14px_-4px_rgba(163,72,36,0.5)]'
-          : outOfStock
-          ? 'border-hairline text-ink-mute/80 cursor-not-allowed bg-[var(--bone)]/50'
-          : 'border-hairline text-ink-mute hover:border-[var(--sienna)] hover:text-ink hover:bg-[var(--bone)]/60'
-      }`}
-      aria-pressed={selected}
-      aria-label={`Size ${size.label}${outOfStock ? ', out of stock' : ''}`}
-      aria-disabled={outOfStock}
-      style={{ ...magnetic.style, ...press.style }}
-    >
-      {size.label}
-    </motion.button>
+    <Tooltip content={tooltipLabel} side="top" sideOffset={6}>
+      <motion.button
+        ref={magnetic.ref as React.Ref<HTMLButtonElement>}
+        onClick={onSelect}
+        onPointerMove={magnetic.onPointerMove}
+        onPointerLeave={magnetic.onPointerLeave}
+        onPointerDown={press.onPointerDown}
+        onPointerUp={press.onPointerUp}
+        onPointerCancel={press.onPointerCancel}
+        disabled={outOfStock}
+        className={`w-12 h-12 border text-sm focus-visible:outline-offset-4 transition-colors duration-200 ${
+          selected
+            ? 'border-[var(--sienna)] bg-sienna text-ivory shadow-[0_4px_14px_-4px_rgba(163,72,36,0.5)]'
+            : outOfStock
+            ? 'border-hairline text-ink-mute/80 cursor-not-allowed bg-[var(--bone)]/50'
+            : 'border-hairline text-ink-mute hover:border-[var(--sienna)] hover:text-ink hover:bg-[var(--bone)]/60'
+        }`}
+        aria-pressed={selected}
+        aria-label={`Size ${size.label}${outOfStock ? ', out of stock' : ''}`}
+        aria-disabled={outOfStock}
+        style={{ ...magnetic.style, ...press.style }}
+      >
+        {size.label}
+      </motion.button>
+    </Tooltip>
   );
 }
 
@@ -170,23 +188,29 @@ function MagneticWishlistButton({
   const press = useSpringPress({ scale: 0.9, stiffness: 500, damping: 20, mass: 0.3 });
 
   return (
-    <motion.button
-      ref={magnetic.ref as React.Ref<HTMLButtonElement>}
-      onClick={onToggle}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      onPointerDown={press.onPointerDown}
-      onPointerUp={press.onPointerUp}
-      onPointerCancel={press.onPointerCancel}
-      className={`p-4 border transition-colors focus-visible:outline-offset-2 ${
-        wishlisted ? 'border-[var(--sienna)] text-sienna' : 'border-hairline text-ink-mute hover:text-ink hover:border-[var(--sienna)]'
-      }`}
-      aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-      aria-pressed={wishlisted}
-      style={{ ...magnetic.style, ...press.style }}
+    <Tooltip
+      content={wishlisted ? 'Remove from Saved Pieces' : 'Save to Atelier Wishlist'}
+      side="top"
+      sideOffset={6}
     >
-      <Heart className={`w-5 h-5 ${wishlisted ? 'fill-current' : ''}`} />
-    </motion.button>
+      <motion.button
+        ref={magnetic.ref as React.Ref<HTMLButtonElement>}
+        onClick={onToggle}
+        onPointerMove={magnetic.onPointerMove}
+        onPointerLeave={magnetic.onPointerLeave}
+        onPointerDown={press.onPointerDown}
+        onPointerUp={press.onPointerUp}
+        onPointerCancel={press.onPointerCancel}
+        className={`p-4 border transition-colors focus-visible:outline-offset-2 ${
+          wishlisted ? 'border-[var(--sienna)] text-sienna' : 'border-hairline text-ink-mute hover:text-ink hover:border-[var(--sienna)]'
+        }`}
+        aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+        aria-pressed={wishlisted}
+        style={{ ...magnetic.style, ...press.style }}
+      >
+        <Heart className={`w-5 h-5 ${wishlisted ? 'fill-current' : ''}`} />
+      </motion.button>
+    </Tooltip>
   );
 }
 
@@ -208,21 +232,23 @@ function MagneticQtyButton({
   const press = useSpringPress({ scale: 0.92, stiffness: 400, damping: 20, mass: 0.5 });
 
   return (
-    <motion.button
-      ref={magnetic.ref as React.Ref<HTMLButtonElement>}
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      onPointerDown={press.onPointerDown}
-      onPointerUp={press.onPointerUp}
-      onPointerCancel={press.onPointerCancel}
-      className="pressable px-3 py-3 text-ink-mute hover:text-ink hover:bg-[var(--bone)] transition-colors focus-visible:outline-offset-0 disabled:opacity-30 disabled:cursor-not-allowed"
-      style={{ ...magnetic.style, ...press.style }}
-    >
-      {children}
-    </motion.button>
+    <Tooltip content={label} side="top" sideOffset={6}>
+      <motion.button
+        ref={magnetic.ref as React.Ref<HTMLButtonElement>}
+        onClick={onClick}
+        disabled={disabled}
+        aria-label={label}
+        onPointerMove={magnetic.onPointerMove}
+        onPointerLeave={magnetic.onPointerLeave}
+        onPointerDown={press.onPointerDown}
+        onPointerUp={press.onPointerUp}
+        onPointerCancel={press.onPointerCancel}
+        className="pressable px-3 py-3 text-ink-mute hover:text-ink hover:bg-[var(--bone)] transition-colors focus-visible:outline-offset-0 disabled:opacity-30 disabled:cursor-not-allowed"
+        style={{ ...magnetic.style, ...press.style }}
+      >
+        {children}
+      </motion.button>
+    </Tooltip>
   );
 }
 
@@ -374,37 +400,80 @@ export default function ProductDetail() {
       <ProductAmbient />
       <div className="container-void relative z-10">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-ink-mute mb-8">
-          <Link to="/home" className="hover:text-ink transition-colors">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/products" className="hover:text-ink transition-colors">Collections</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-ink">{product.name}</span>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+          className="flex items-center gap-2 text-sm text-ink-mute mb-8"
+        >
+          <Link to="/home" className="hover:text-sienna transition-colors duration-200">Home</Link>
+          <ChevronRight className="w-3 h-3 text-ink-mute/40" />
+          <Link to="/products" className="hover:text-sienna transition-colors duration-200">Collections</Link>
+          <ChevronRight className="w-3 h-3 text-ink-mute/40" />
+          <span className="text-ink font-medium">{product.name}</span>
+        </motion.div>
 
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
         >
-          {/* Image Gallery */}
-          <motion.div variants={fadeUpVariants} className="space-y-4">
-            <ParallaxProductImage
-              src={colorImages[activeImage]}
-              alt={product.name}
-              priority
-            />
+          {/* Image Gallery — Desktop Sticky with Zoom Lightbox, Mobile with Embla Touch Carousel */}
+          <motion.div variants={fadeUpVariants} className="space-y-4 lg:sticky lg:top-32 lg:self-start">
+            {/* Mobile Touch Carousel (Embla) */}
+            <div className="lg:hidden">
+              <ProductImageCarousel
+                images={colorImages}
+                alt={product.name}
+                onSlideClick={(index) => setActiveImage(index)}
+              />
+            </div>
+
+            {/* Desktop Parallax + Fullscreen Lightbox Zoom */}
+            <div className="hidden lg:block">
+              <ImageZoom
+                images={colorImages}
+                alt={product.name}
+                initialIndex={activeImage}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeImage + '-' + selectedColor}
+                    initial={{ opacity: 0.6, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.4, scale: 0.97 }}
+                    transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+                    className="relative group/zoom"
+                  >
+                    <ParallaxProductImage
+                      src={colorImages[activeImage]}
+                      alt={product.name}
+                      priority
+                    />
+                    <div className="absolute bottom-4 right-4 z-10 opacity-0 group-hover/zoom:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <span className="font-mono text-[9px] uppercase tracking-widest bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full border border-white/20 shadow-lg">
+                        Click to Expand Lightbox ↗
+                      </span>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </ImageZoom>
+            </div>
+
+            {/* Desktop Thumbnail Strip */}
             {colorImages.length > 1 && (
-              <div className="flex gap-2">
+              <div className="hidden lg:flex gap-2">
                 {colorImages.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
                     onMouseEnter={() => setCursorVariant('hover')}
                     onMouseLeave={() => setCursorVariant('default')}
-                    className={`w-16 h-20 border overflow-hidden focus-visible:border-[var(--sienna)] ${
-                      activeImage === i ? 'border-[var(--sienna)]' : 'border-hairline'
+                    className={`relative w-16 h-20 rounded-lg overflow-hidden focus-visible:outline-offset-2 transition-all duration-300 ${
+                      activeImage === i
+                        ? 'ring-2 ring-sienna ring-offset-2 ring-offset-[var(--ivory)] scale-105'
+                        : 'border border-hairline opacity-60 hover:opacity-100 hover:border-ink/30'
                     }`}
                     aria-label={`View image ${i + 1} of ${colorImages.length}`}
                     aria-pressed={activeImage === i}
@@ -420,37 +489,63 @@ export default function ProductDetail() {
                 ))}
               </div>
             )}
-            {colorImages.length > 1 && (
-              <p className="text-xs text-ink-mute/60 flex items-center gap-1.5 md:hidden">
-                <span className="w-4 h-px bg-sienna" /> Swipe or use arrow keys
-              </p>
-            )}
           </motion.div>
 
           {/* Product Info */}
-          <motion.div variants={fadeUpVariants} className="space-y-6">
+          <motion.div variants={fadeUpVariants} className="space-y-7">
             <div>
-              <span className="atelier-eyebrow text-sienna">{product.brand}</span>
-              <h1 className="atelier-display text-3xl sm:text-4xl mt-2">{product.name}</h1>
-              <div className="flex items-center gap-4 mt-3">
+              <motion.span
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.4 }}
+                className="atelier-eyebrow text-sienna"
+              >
+                {product.brand}
+              </motion.span>
+              <motion.h1
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.22, type: 'spring', stiffness: 200, damping: 24 }}
+                className="atelier-display text-3xl sm:text-4xl lg:text-[2.75rem] mt-2 leading-[1.1]"
+              >
+                {product.name}
+              </motion.h1>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35, duration: 0.4 }}
+                className="flex items-center gap-4 mt-3"
+              >
                 <div className="flex items-center gap-2">
                   <StarRating rating={product.avgRating} showValue />
                   <span className="text-ink-mute text-sm">({product.reviewCount} reviews)</span>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <span className="text-headline-md text-ink font-display">{formatPrice(product.price)}</span>
+            <motion.div
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+              className="flex items-center gap-4"
+            >
+              <span className="text-headline-md text-ink font-display tabular-nums">{formatPrice(product.price)}</span>
               {product.comparePrice && (
                 <>
-                  <span className="text-ink-mute line-through">{formatPrice(product.comparePrice)}</span>
-                  <span className="bg-sienna text-ivory text-xs px-2 py-1">-{discount}%</span>
+                  <span className="text-ink-mute line-through tabular-nums">{formatPrice(product.comparePrice)}</span>
+                  <span className="bg-sienna text-ivory text-xs font-mono font-bold px-2.5 py-1 rounded-full tracking-wider">-{discount}%</span>
                 </>
               )}
-            </div>
+            </motion.div>
 
-            <p className="text-ink-soft leading-relaxed">{product.description}</p>
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.48, duration: 0.5 }}
+              className="text-ink-soft leading-relaxed"
+            >
+              {product.description}
+            </motion.p>
 
             {/* Colorways */}
             {product.colorways.length > 0 && (
@@ -555,20 +650,28 @@ export default function ProductDetail() {
               )}
 
               <div className="grid grid-cols-2 gap-3 pt-3">
-                <div className="p-3.5 border border-hairline bg-[var(--bone)]/30 rounded-lg">
+                <motion.div
+                  whileHover={{ y: -2, boxShadow: '0 6px 20px -6px rgba(24,20,16,0.1)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="p-3.5 border border-hairline bg-[var(--bone)]/30 rounded-xl cursor-default"
+                >
                   <span className="block font-mono text-[10px] uppercase tracking-wider text-sienna mb-1">Global Shipping</span>
                   <span className="text-xs text-ink font-light">Complimentary courier on orders over $500</span>
-                </div>
-                <div className="p-3.5 border border-hairline bg-[var(--bone)]/30 rounded-lg">
+                </motion.div>
+                <motion.div
+                  whileHover={{ y: -2, boxShadow: '0 6px 20px -6px rgba(24,20,16,0.1)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="p-3.5 border border-hairline bg-[var(--bone)]/30 rounded-xl cursor-default"
+                >
                   <span className="block font-mono text-[10px] uppercase tracking-wider text-sienna mb-1">Authenticity</span>
                   <span className="text-xs text-ink font-light">Numbered Certificate of Provenance</span>
-                </div>
+                </motion.div>
               </div>
 
               {product.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-2">
                   {product.tags.map((tag) => (
-                    <span key={tag} className="text-xs font-mono text-ink-mute/60">#{tag}</span>
+                    <span key={tag} className="text-xs font-mono text-ink-mute">#{tag}</span>
                   ))}
                 </div>
               )}
@@ -577,23 +680,28 @@ export default function ProductDetail() {
         </motion.div>
 
         {/* Sticky Mobile Add to Cart Bar */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-[rgba(var(--ivory-rgb),0.95)] backdrop-blur-xl border-t border-hairline p-4 lg:hidden">
+        <motion.div
+          initial={{ y: 80 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.6, type: 'spring', stiffness: 300, damping: 28 }}
+          className="fixed bottom-0 left-0 right-0 z-40 bg-[rgba(var(--ivory-rgb),0.88)] backdrop-blur-2xl border-t border-hairline/60 p-4 lg:hidden shadow-[0_-4px_24px_-8px_rgba(24,20,16,0.1)]"
+        >
           <div className="container-void flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-ink font-display text-lg truncate">{formatPrice(product.price * quantity)}</p>
-              <p className="text-xs text-ink-mute">
+              <p className="text-ink font-display text-lg truncate tabular-nums">{formatPrice(product.price * quantity)}</p>
+              <p className="text-[10px] text-ink-mute font-mono uppercase tracking-wider">
                 {selectedSize ? `Size ${selectedSize}` : product.sizes.length > 0 ? 'Select a size' : 'One size'}
               </p>
             </div>
             <button
               onClick={handleAddToCart}
               disabled={!inStock || (product.sizes.length > 0 && !selectedSize)}
-              className="atelier-btn !min-h-0 !py-3 !px-5 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+              className="atelier-btn !min-h-0 !py-3 !px-6 text-xs disabled:opacity-50 disabled:cursor-not-allowed rounded-full"
             >
               {!inStock ? 'Out of Stock' : product.sizes.length > 0 && !selectedSize ? 'Select Size' : 'Add to Cart'}
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Reviews Section */}
         <div className="mt-24 pt-16 border-t border-hairline relative z-10">

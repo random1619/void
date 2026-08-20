@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useReducedMotion, useInView } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
+import { useRef } from 'react';
 import type { Product } from '../../types';
 import { formatPrice, calcDiscount } from '../../lib/utils';
 import { useWishlistStore } from '../../stores/wishlistStore';
 import { useCartStore } from '../../stores/cartStore';
-import { useReducedMotion } from 'framer-motion';
 
 import { toast } from 'sonner';
 import { Image } from '../ui/Image';
@@ -160,9 +160,17 @@ export function ProductCard({ product, showDetails = true, imagePriority = false
     cardRotate.set(0);
   };
 
+  // Scroll-driven entrance reveal
+  const revealRef = useRef<HTMLElement>(null);
+  const isInView = useInView(revealRef, { once: true, margin: '-60px' });
+
   return (
     <motion.article
+      ref={revealRef}
       className="group relative"
+      initial={{ opacity: 0, y: 28, scale: 0.97 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 28, scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 26, mass: 0.8 }}
       style={{
         x: cardSpringX,
         y: cardSpringY,
@@ -176,18 +184,31 @@ export function ProductCard({ product, showDetails = true, imagePriority = false
           keyboard users can reach quick-add via focus-within. */}
       <Link
         to={`/products/${product.slug}`}
-        className="block relative aspect-[3/4] atelier-frame atelier-frame-hover focus-visible:outline-offset-4"
+        className="block relative aspect-[3/4] atelier-frame atelier-frame-hover focus-visible:outline-offset-4 overflow-hidden rounded-xl shadow-[0_2px_12px_-4px_rgba(24,20,16,0.08)] group-hover:shadow-[0_12px_40px_-12px_rgba(24,20,16,0.18)] transition-shadow duration-500"
         aria-label={`${product.name} by ${product.brand}`}
       >
         {product.images?.[0] ? (
-          <Image
-            src={product.images[0].url}
-            alt={product.images[0].alt || product.name}
-            loading={imagePriority ? 'eager' : 'lazy'}
-            fetchPriority={imagePriority ? 'high' : 'auto'}
-            decoding="async"
-            className="w-full h-full object-cover"
-          />
+          <>
+            <Image
+              src={product.images[0].url}
+              alt={product.images[0].alt || product.name}
+              loading={imagePriority ? 'eager' : 'lazy'}
+              fetchPriority={imagePriority ? 'high' : 'auto'}
+              decoding="async"
+              className={`w-full h-full object-cover transition-all duration-700 ease-out ${
+                product.images[1] ? 'group-hover:opacity-0 group-hover:scale-105' : 'group-hover:scale-105'
+              }`}
+            />
+            {product.images[1] && (
+              <Image
+                src={product.images[1].url}
+                alt={`${product.name} alternate angle`}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
+              />
+            )}
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-[var(--bone)]">
             <span className="font-display text-4xl text-ink-mute/30">V</span>
@@ -235,19 +256,39 @@ export function ProductCard({ product, showDetails = true, imagePriority = false
       )}
 
       {showDetails && (
-        <div className="mt-3.5 space-y-1">
+        <div className="mt-3.5 space-y-1.5">
           <div className="flex justify-between items-start">
-            <h3 className="font-display text-ink text-base group-hover:text-sienna transition-colors line-clamp-2 leading-snug">
+            <h3 className="font-display text-ink text-base group-hover:text-sienna transition-colors duration-300 line-clamp-2 leading-snug">
               {product.name}
             </h3>
           </div>
-          {product.brand && (
-            <p className="atelier-eyebrow text-ink-mute">{product.brand}</p>
-          )}
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-0.5">
-            <span className="text-sienna font-display text-lg font-semibold">{formatPrice(product.price)}</span>
+          <div className="flex items-center justify-between">
+            {product.brand && (
+              <p className="atelier-eyebrow text-ink-mute group-hover:text-sienna/70 transition-colors duration-300">{product.brand}</p>
+            )}
+            {/* Colorway preview swatches */}
+            {product.colorways && product.colorways.length > 1 && (
+              <div className="flex items-center gap-1">
+                {product.colorways.slice(0, 3).map((cw) => (
+                  <span
+                    key={cw.name}
+                    title={cw.name}
+                    className="w-2.5 h-2.5 rounded-full border border-ink/20"
+                    style={{ backgroundColor: cw.hex }}
+                  />
+                ))}
+                {product.colorways.length > 3 && (
+                  <span className="font-mono text-[9px] text-ink-mute">
+                    +{product.colorways.length - 3}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-1">
+            <span className="text-sienna font-display text-lg font-semibold tabular-nums">{formatPrice(product.price)}</span>
             {product.comparePrice && (
-              <span className="text-ink-mute line-through text-sm">
+              <span className="text-ink-mute line-through text-sm tabular-nums">
                 {formatPrice(product.comparePrice)}
               </span>
             )}

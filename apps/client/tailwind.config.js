@@ -36,6 +36,12 @@ export default {
         sienna: 'rgba(var(--sienna-rgb), <alpha-value>)',
         ink: 'rgba(var(--ink-rgb), <alpha-value>)',
         ivory: 'rgba(var(--ivory-rgb), <alpha-value>)',
+        // hairline carries a baked 14% opacity in the CSS variable, so
+        // modifiers like border-hairline/60 must scale that base strength
+        // (color-mix), not replace it with 60% solid ink.
+        hairline: 'color-mix(in srgb, var(--hairline) calc(<alpha-value> * 100%), transparent)',
+        bone: 'rgba(var(--bone-rgb), <alpha-value>)',
+        'ivory-deep': 'rgba(var(--ivory-deep-rgb), <alpha-value>)',
       },
       fontFamily: {
         display: ['"Cabinet Grotesk"', 'Outfit', '"Playfair Display"', 'Georgia', 'sans-serif'],
@@ -43,6 +49,7 @@ export default {
         outfit: ['Outfit', 'sans-serif'],
         playfair: ['"Playfair Display"', 'Georgia', 'serif'],
         sans: ['Satoshi', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
         mono: ['"Geist Mono"', '"Space Mono"', '"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {

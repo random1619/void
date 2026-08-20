@@ -81,15 +81,15 @@ export function HorizontalLookbook() {
                 alt={`Look ${look.id}: ${look.title}`}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-ivory">
-                <span className="atelier-eyebrow text-sienna text-[10px] block mb-2">
+                <span className="atelier-eyebrow text-sienna text-[10px] block mb-2 font-bold">
                   Look Nº {look.id}
                 </span>
-                <h3 className="font-display text-3xl md:text-4xl leading-none">{look.title}</h3>
-                <p className="text-ivory/70 text-sm mt-2 font-light">{look.subtitle}</p>
+                <h3 className="font-display text-3xl md:text-4xl leading-none font-bold">{look.title}</h3>
+                <p className="text-ivory/80 text-sm mt-2 font-light">{look.subtitle}</p>
               </div>
             </div>
           </article>

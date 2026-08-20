@@ -9,6 +9,7 @@ import { useDismissibleSheet } from '../../hooks/useDismissibleSheet';
 import { useDialog } from '../../hooks/useDialog';
 import { primaryNavLinks, supportLinks, isNavLinkActive } from '../../lib/navigation';
 import { ThemeToggle } from './ThemeToggle';
+import { BrandLogo } from './BrandLogo';
 
 const MENU_TITLE_ID = 'mobile-menu-title';
 export const MOBILE_MENU_PANEL_ID = 'mobile-menu-panel';
@@ -62,14 +63,7 @@ export function MobileMenu() {
               <h2 id={MENU_TITLE_ID} className="sr-only">
                 Menu
               </h2>
-              <Link
-                to="/"
-                onClick={closeMobileMenu}
-                className="font-display text-xl text-ink tracking-widest font-bold hover:text-sienna transition-colors focus-visible:outline-offset-2"
-                aria-label="VOID Home"
-              >
-                VOID
-              </Link>
+              <BrandLogo size="md" onClick={closeMobileMenu} />
               <button
                 onClick={closeMobileMenu}
                 className="pressable text-ink-mute hover:text-ink transition-colors p-2 -m-2 min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-offset-2"

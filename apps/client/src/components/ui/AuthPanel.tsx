@@ -8,6 +8,8 @@ import { EASE_LUXURY, EASE_EXIT } from '../../lib/animations';
 import { springs } from '../../lib/motion-tokens';
 import { useDialog } from '../../hooks/useDialog';
 
+import { BrandLogo } from './BrandLogo';
+
 const AUTH_TITLE_ID = 'auth-panel-title';
 export const AUTH_PANEL_ID = 'auth-panel';
 
@@ -186,13 +188,12 @@ export function AuthPanel() {
 
             {/* Header with Close and Segmented Tab Control */}
             <div className="px-6 pt-5 pb-4 border-b border-hairline/60 flex items-center justify-between gap-4">
-              <div>
-                <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-sienna font-bold mb-0.5">
-                  VOID Atelier
-                </p>
+              <div className="flex items-center gap-3">
+                <BrandLogo size="sm" showSubtext={false} />
+                <div className="h-4 w-px bg-hairline" />
                 <h2
                   id={AUTH_TITLE_ID}
-                  className="text-xl font-bold tracking-tight text-ink"
+                  className="text-base font-bold tracking-tight text-ink"
                   style={{ fontFamily: 'var(--font-heading)' }}
                 >
                   {authPanelMode === 'login'
@@ -289,7 +290,7 @@ export function AuthPanel() {
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="client@atelier.void"
                           required
-                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                         />
                       </div>
                     </div>
@@ -321,7 +322,7 @@ export function AuthPanel() {
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
                           required
-                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl pl-3.5 pr-11 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl pl-3.5 pr-11 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                         />
                         <button
                           type="button"
@@ -399,7 +400,7 @@ export function AuthPanel() {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Elena Rostova"
                         required
-                        className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                        className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                       />
                     </div>
 
@@ -420,7 +421,7 @@ export function AuthPanel() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="elena@atelier.void"
                         required
-                        className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                        className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                       />
                     </div>
 
@@ -443,7 +444,7 @@ export function AuthPanel() {
                           placeholder="Min. 6 characters"
                           minLength={6}
                           required
-                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl pl-3.5 pr-11 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                          className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl pl-3.5 pr-11 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                         />
                         <button
                           type="button"
@@ -539,7 +540,7 @@ export function AuthPanel() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="client@atelier.void"
                             required
-                            className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-all font-body"
+                            className="w-full bg-[var(--bone)]/50 border border-hairline rounded-xl px-3.5 py-3 text-sm text-ink placeholder:text-ink-mute/50 focus:outline-none focus:border-sienna focus:bg-[var(--bone)]/90 transition-[border-color,background-color] font-body"
                           />
                         </div>
 

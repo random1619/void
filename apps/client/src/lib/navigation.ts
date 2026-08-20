@@ -104,7 +104,7 @@ export const primaryNavPanels: Record<string, NavPanel> = {
     featured: {
       label: 'The Sculpted Wool Overcoat',
       to: '/products/architectural-overcoat',
-      image: '/products/sculpted_wool_coat.png',
+      image: '/nav_sculpted_wool_coat.png',
       alt: 'Architectural Overcoat in sculpted wool',
     },
   },
@@ -137,7 +137,7 @@ export const primaryNavPanels: Record<string, NavPanel> = {
     featured: {
       label: 'Monolith Caliber V-01',
       to: '/watches',
-      image: '/products/obsidian_titanium_hero.png',
+      image: '/nav_monolith_watch.png',
       alt: 'VOID Monolith watch in obsidian titanium',
     },
   },
@@ -166,7 +166,7 @@ export const primaryNavPanels: Record<string, NavPanel> = {
     featured: {
       label: 'Edition IV: The Lookbook',
       to: '/lookbook',
-      image: '/lookbook_hero_wide.jpg',
+      image: '/nav_lookbook_hero.jpg',
       alt: 'VOID Edition IV Lookbook Editorial',
     },
   },
@@ -178,7 +178,18 @@ export const primaryNavPanels: Record<string, NavPanel> = {
         heading: 'House',
         links: [
           { label: 'Our Story', to: '/about', matchPath: '/about' },
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+          { label: 'Craft Atelier', to: '/craft-atelier', matchPath: '/craft-atelier' },
           { label: 'Stores', to: '/stores', matchPath: '/stores' },
+          { label: 'The Maisons', to: '/maisons', matchPath: '/maisons' },
+        ],
+      },
+      {
+        heading: 'Atelier',
+        links: [
+          { label: 'Materials Archive', to: '/materials', matchPath: '/materials' },
+          { label: 'The Journey', to: '/the-journey', matchPath: '/the-journey' },
+          { label: 'New Arrivals', to: '/new-arrivals', matchPath: '/new-arrivals' },
         ],
       },
       {
@@ -192,8 +203,147 @@ export const primaryNavPanels: Record<string, NavPanel> = {
     featured: {
       label: 'The Atelier',
       to: '/about',
-      image: '/lookbook-1-alt.png',
+      image: '/nav_atelier_look.png',
       alt: 'Inside the VOID atelier',
+    },
+  },
+  '/heritage': {
+    eyebrow: 'Lineage',
+    description: 'A century of monolith discipline.',
+    columns: [
+      {
+        heading: 'Maison',
+        links: [
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+          { label: 'Our Story', to: '/about', matchPath: '/about' },
+          { label: 'Craft Atelier', to: '/craft-atelier', matchPath: '/craft-atelier' },
+        ],
+      },
+      {
+        heading: 'Explore',
+        links: [
+          { label: 'Materials Archive', to: '/materials', matchPath: '/materials' },
+          { label: 'The Journeys', to: '/the-journey', matchPath: '/the-journey' },
+          { label: 'The Maisons', to: '/maisons', matchPath: '/maisons' },
+        ],
+      },
+    ],
+    featured: {
+      label: 'The Founding',
+      to: '/heritage',
+      image: '/nav_heritage_founding.jpg',
+      alt: 'VOID founding archives',
+    },
+  },
+  '/craft-atelier': {
+    eyebrow: 'The Workshop',
+    description: 'Where the objects are made.',
+    columns: [
+      {
+        heading: 'Atelier',
+        links: [
+          { label: 'Craft Atelier', to: '/craft-atelier', matchPath: '/craft-atelier' },
+          { label: 'Materials Archive', to: '/materials', matchPath: '/materials' },
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+        ],
+      },
+      {
+        heading: 'Explore',
+        links: [
+          { label: 'The Journey', to: '/the-journey', matchPath: '/the-journey' },
+          { label: 'Horology', to: '/watches', matchPath: '/watches' },
+          { label: 'The Maisons', to: '/maisons', matchPath: '/maisons' },
+        ],
+      },
+    ],
+    featured: {
+      label: 'The Workshop Floor',
+      to: '/craft-atelier',
+      image: '/nav_craft_workshop.jpg',
+      alt: 'Inside the VOID workshop',
+    },
+  },
+  '/materials': {
+    eyebrow: 'The Archive',
+    description: 'Silk, wool, metal — catalogued.',
+    columns: [
+      {
+        heading: 'Archive',
+        links: [
+          { label: 'Materials Archive', to: '/materials', matchPath: '/materials' },
+          { label: 'Craft Atelier', to: '/craft-atelier', matchPath: '/craft-atelier' },
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+        ],
+      },
+      {
+        heading: 'Shop',
+        links: [
+          { label: 'New Arrivals', to: '/new-arrivals', matchPath: '/new-arrivals' },
+          { label: 'All Products', to: '/products', matchPath: '/products' },
+        ],
+      },
+    ],
+    featured: {
+      label: 'Material Origins',
+      to: '/materials',
+      image: '/nav_material_origins.jpg',
+      alt: 'VOID materials archive',
+    },
+  },
+  '/maisons': {
+    eyebrow: 'The Maisons',
+    description: 'Flagships in five cities.',
+    columns: [
+      {
+        heading: 'Maisons',
+        links: [
+          { label: 'The Maisons', to: '/maisons', matchPath: '/maisons' },
+          { label: 'Stores', to: '/stores', matchPath: '/stores' },
+          { label: 'New Arrivals', to: '/new-arrivals', matchPath: '/new-arrivals' },
+        ],
+      },
+      {
+        heading: 'Maison',
+        links: [
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+          { label: 'Our Story', to: '/about', matchPath: '/about' },
+          { label: 'Contact', to: '/contact', matchPath: '/contact' },
+        ],
+      },
+    ],
+    featured: {
+      label: 'The Atelier',
+      to: '/maisons',
+      image: '/nav_flagship_atelier.jpg',
+      alt: 'The VOID flagship atelier',
+    },
+  },
+  '/the-journey': {
+    eyebrow: 'The Journey',
+    description: 'From fiber to form.',
+    columns: [
+      {
+        heading: 'Journey',
+        links: [
+          { label: 'The Journey', to: '/the-journey', matchPath: '/the-journey' },
+          { label: 'Materials Archive', to: '/materials', matchPath: '/materials' },
+          { label: 'Craft Atelier', to: '/craft-atelier', matchPath: '/craft-atelier' },
+        ],
+      },
+      {
+        heading: 'Maison',
+        links: [
+          { label: 'Heritage', to: '/heritage', matchPath: '/heritage' },
+          { label: 'The Maisons', to: '/maisons', matchPath: '/maisons' },
+          { label: 'Contact', to: '/contact', matchPath: '/contact' },
+        ],
+      },
+    ],
+    featured: {
+      label: 'Fiber to Form',
+      to: '/the-journey',
+      image: '/nav_fiber_to_form.png',
+      alt: 'The VOID journey',
     },
   },
 };

@@ -31,7 +31,7 @@ const EDITORIAL_CHAPTERS: Chapter[] = [
     category: 'Architectural Tailoring',
     title: 'Architectural precision meets fluid tailoring.',
     desc: 'Every garment is patterned from structural blueprints, balancing sculpted shoulders with weightless Japanese wool-silk drape.',
-    image: '/chapter_one_silhouettes.jpg',
+    image: '/chapter_01_editorial.jpg',
     link: '/collections',
     linkText: 'Explore Silhouettes',
     specs: [
@@ -47,7 +47,7 @@ const EDITORIAL_CHAPTERS: Chapter[] = [
     category: 'Horology Studio',
     title: 'Horology calibrated to mechanical eternity.',
     desc: 'Hand-beveled titanium cases housing custom automatic movements, individually engraved and registered in our master ledger.',
-    image: '/chapter_two_metallurgy.jpg',
+    image: '/chapter_02_editorial.jpg',
     link: '/watch',
     linkText: 'Configure Timepiece',
     specs: [
@@ -63,7 +63,7 @@ const EDITORIAL_CHAPTERS: Chapter[] = [
     category: 'Textile Heritage',
     title: 'Hyper-dense Japanese merinos and raw silks.',
     desc: 'Uncompromising textile sourcing from historic heritage mills in Owari and Kyoto, finished by hand in micro-batches of fifty.',
-    image: '/chapter_three_matter.jpg',
+    image: '/chapter_03_editorial.jpg',
     link: '/products',
     linkText: 'Discover Raw Matter',
     specs: [
@@ -139,7 +139,7 @@ export function AtelierEditorialScroll() {
                       key={chap.id}
                       type="button"
                       onClick={() => setActiveChapter(idx)}
-                      className={`text-left p-3.5 rounded-2xl transition-all duration-300 border flex flex-col gap-1 relative ${
+                      className={`text-left p-3.5 rounded-2xl transition-[background-color,border-color,box-shadow] duration-300 border flex flex-col gap-1 relative ${
                         isActive
                           ? 'bg-[var(--bone)] border-sienna shadow-[0_4px_16px_rgba(163,72,36,0.15)]'
                           : 'bg-[var(--ivory)] border-hairline hover:bg-[var(--bone)]/60 hover:border-ink/20'

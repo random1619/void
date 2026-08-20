@@ -67,21 +67,21 @@ const LOOKBOOKS: Record<string, LookbookItem> = {
     looks: [
       {
         title: 'Look I \u00b7 Sculpted Wool Coat',
-        image: '/products/sculpted_wool_coat.png',
+        image: '/collections_look_01_coat.png',
         caption:
           'Draped wool coat with hand-rolled edges and sculptural shoulders, cut in one continuous piece.',
         productSlug: 'architectural-overcoat',
       },
       {
         title: 'Look II \u00b7 Draped Silk Shirt',
-        image: '/products/draped_silk_shirt.png',
+        image: '/collections_look_02_silk_shirt.png',
         caption:
           'Tonal embroidery on washed silk, layered beneath a sculpted chest piece cast in warm brass.',
         productSlug: 'atelier-draped-shirt',
       },
       {
         title: 'Look III \u00b7 Cashmere Evening Gown',
-        image: '/products/cashmere_evening_gown.png',
+        image: '/collections_look_03_gown.png',
         caption:
           'A long, quiet silhouette in organic cashmere with an asymmetric train that moves with the wearer.',
         productSlug: 'cashmere-storm-coat',
@@ -107,7 +107,7 @@ const LOOKBOOKS: Record<string, LookbookItem> = {
       },
       {
         title: 'Look II \u00b7 Weathered Leather Boot',
-        image: '/products/weathered_leather_boot.png',
+        image: '/collections_look_02_boot.png',
         caption:
           'A clean-lined boot in vegetable-tanned leather on a stitched rubber sole, made to age gracefully.',
         productSlug: 'futuristic-leather-boots',
@@ -905,7 +905,7 @@ export default function Collections() {
                       }
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src =
-                          '/void_login_hero.png';
+                          '/collections_fallback_hero.png';
                       }}
                       initial={
                         reducedMotion
@@ -981,7 +981,7 @@ export default function Collections() {
                       }
                     </p>
 
-                    <p className="text-xs text-ink-mute/80 leading-relaxed border-t border-hairline pt-4">
+                    <p className="text-xs text-ink-mute leading-relaxed border-t border-hairline pt-4">
                       {currentLookbook.description}
                     </p>
                   </div>

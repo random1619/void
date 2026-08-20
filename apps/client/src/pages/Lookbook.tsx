@@ -33,8 +33,8 @@ const EASE_FLUID = [0.32, 0.72, 0, 1] as const;
 const LOOKS = [
   {
     id: '01',
-    image: '/lookbook_look_01_drape.jpg',
-    detail: '/lookbook_look_01_drape.jpg',
+    image: '/lookbook_01_main.jpg',
+    detail: '/lookbook_01_detail.jpg',
     title: 'The Draped Hour',
     subtitle: 'Silk & Structure',
     season: 'Edition IV',
@@ -44,8 +44,8 @@ const LOOKS = [
   },
   {
     id: '02',
-    image: '/products/sculpted_wool_coat.png',
-    detail: '/products/sculpted_wool_coat.png',
+    image: '/lookbook_02_coat_main.png',
+    detail: '/lookbook_02_coat_detail.png',
     title: 'Ivory Volume',
     subtitle: 'Wool & Weight',
     season: 'Edition IV',
@@ -55,8 +55,8 @@ const LOOKS = [
   },
   {
     id: '03',
-    image: '/products/canvas_field_jacket.png',
-    detail: '/products/canvas_field_jacket.png',
+    image: '/lookbook_03_jacket_main.png',
+    detail: '/lookbook_03_jacket_detail.png',
     title: 'Soft Armor',
     subtitle: 'Leather & Line',
     season: 'Edition IV',
@@ -66,8 +66,8 @@ const LOOKS = [
   },
   {
     id: '04',
-    image: '/products/cashmere_evening_gown.png',
-    detail: '/products/cashmere_evening_gown.png',
+    image: '/lookbook_04_gown_main.png',
+    detail: '/lookbook_04_gown_detail.png',
     title: 'Quiet Storm',
     subtitle: 'Cashmere & Control',
     season: 'Edition IV',
@@ -83,28 +83,28 @@ const CHAPTERS = [
     title: 'Drape',
     line: 'Fabric that follows the body, never fights it.',
     essay: 'Every thread is chosen for its fall. We pattern on a moving form, not a static one. Each seam maps to the gesture it will serve.',
-    image: '/lookbook_look_01_drape.jpg',
+    image: '/lookbook_drape_essay.jpg',
   },
   {
     numeral: 'II',
     title: 'Structure',
     line: 'Seams that make a silhouette hold its ground.',
     essay: 'Shoulder lines drawn with architectural calipers. Lapels pressed under seventeen kilos of steam. Construction you can hear in the way the coat hangs.',
-    image: '/products/sculpted_wool_coat.png',
+    image: '/lookbook_structure_essay.png',
   },
   {
     numeral: 'III',
     title: 'Hide',
     line: 'Leather worked until it behaves like cloth.',
     essay: 'Vegetable-tanned for nine months. Hand-softened over a brass roller. The grain is a signature. Every hide tells its own biography.',
-    image: '/products/canvas_field_jacket.png',
+    image: '/lookbook_hide_essay.png',
   },
   {
     numeral: 'IV',
     title: 'Weight',
     line: 'Heavy cloth, cut light: volume without mass.',
     essay: 'Dense Japanese merinos woven at the heritage Biella mills, then finished in micro-batches of fifty. The cloth drapes heavy; the garment lifts.',
-    image: '/products/cashmere_evening_gown.png',
+    image: '/lookbook_weight_essay.png',
   },
 ];
 
@@ -198,7 +198,7 @@ function Masthead() {
           Dressed in <em className="italic font-normal text-sienna">Light</em>,
           <span
             className="inline-block w-14 sm:w-20 md:w-28 h-7 sm:h-9 md:h-12 rounded-full align-middle mx-2 sm:mx-3 bg-cover bg-center border border-white/30 shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300"
-            style={{ backgroundImage: "url('/lookbook_look_01_drape.jpg')" }}
+            style={{ backgroundImage: "url('/lookbook_hero_pill.jpg')" }}
             aria-hidden="true"
           />
           Cut in <em className="italic font-normal text-sienna">Shadow</em>
@@ -351,7 +351,7 @@ const EditorialSpread = memo(function EditorialSpread({
             />
             {/* Hover overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+            <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-[opacity,transform] duration-500">
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white font-bold">
                 View detail
               </span>
@@ -571,7 +571,7 @@ function Lightbox({
                 aria-label={`Go to look ${i + 1}`}
               >
                 <span
-                  className={`block h-2 rounded-full transition-all duration-300 ${
+                  className={`block h-2 rounded-full transition-[width,background-color] duration-300 ${
                     i === activeIndex
                       ? 'bg-sienna w-6'
                       : 'bg-white/30 hover:bg-white/60 w-2'
@@ -587,242 +587,170 @@ function Lightbox({
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
-/* DRAG GALLERY                                                               */
+/* PLATE SLIDER — Scroll-Driven Horizontal Pinned Slider                       */
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
-const DECELERATION_RATE = 0.998;
-const RUBBERBAND_CONSTANT = 0.55;
-
-function project(velocity: number, decel = DECELERATION_RATE): number {
-  return (velocity / 1000) * decel / (1 - decel);
-}
-
-function rubberband(overshoot: number, dimension: number): number {
-  return (overshoot * dimension * RUBBERBAND_CONSTANT) /
-    (dimension + RUBBERBAND_CONSTANT * Math.abs(overshoot));
-}
-
 function DragGallery({ onOpenLightbox }: { onOpenLightbox: (index: number) => void }) {
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion() === true;
-
-  const [bounds, setBounds] = useState({ min: 0, max: 0 });
   const [activeLookIndex, setActiveLookIndex] = useState(0);
-
-  const dragX = useMotionValue(0);
-  const displayX = useSpring(dragX, { stiffness: 900, damping: 55, mass: 0.4 });
-  const progress = useTransform(displayX, [0, -bounds.max || -1], [0, 1]);
-
-  useMotionValueEvent(progress, 'change', (p) => {
-    const count = LOOKS.length;
-    const clamped = Math.min(count - 1, Math.max(0, Math.round(p * (count - 1))));
-    if (clamped !== activeLookIndex) {
-      setActiveLookIndex(clamped);
-    }
-  });
-
-  const historyRef = useRef<{ t: number; x: number; committed: boolean }[]>([]);
-  const suppressClickRef = useRef(false);
-  const didDragRef = useRef(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const reducedMotion = useReducedMotion() === true;
+  const triggerRef = useRef<ScrollTrigger | null>(null);
+  const totalLooks = LOOKS.length;
 
   useLayoutEffect(() => {
-    const measure = () => {
-      const viewport = viewportRef.current;
-      const track = trackRef.current;
-      if (!viewport || !track) return;
-      const max = Math.max(0, track.scrollWidth - viewport.clientWidth);
-      setBounds({ min: -max, max: 0 });
-      dragX.set(Math.max(-max, Math.min(0, dragX.get())));
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [dragX]);
+    if (reducedMotion || prefersReducedMotion()) return;
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
 
-  if (reducedMotion) {
-    return (
-      <div ref={viewportRef} className="overflow-x-auto pb-4 -mx-6 px-6 md:-mx-12 md:px-12">
-        <div ref={trackRef} className="flex gap-6 w-max">
-          {LOOKS.map((look, i) => (
-            <figure key={look.id} className="w-[78vw] md:w-[44vw] lg:w-[36vw] shrink-0">
-              <div
-                className="atelier-frame aspect-[4/5] overflow-hidden rounded-lg cursor-pointer"
-                onClick={() => onOpenLightbox(i)}
-              >
-                <Image src={look.image} alt={look.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-              </div>
-              <figcaption className="mt-4 flex justify-between items-baseline">
-                <span className="atelier-eyebrow text-ink-mute text-[10px]">Look {look.id}</span>
-                <span className="font-display text-lg text-ink">{look.title}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    );
-  }
+    const ctx = gsap.context(() => {
+      const calculateDistance = () => {
+        return Math.max(0, track.scrollWidth - window.innerWidth + 96);
+      };
 
-  const springTo = (target: number, velocity: number) => {
-    animate(dragX, target, {
-      type: 'spring',
-      stiffness: 260,
-      damping: 30,
-      mass: 0.9,
-      velocity,
-    });
-  };
+      const distance = calculateDistance();
 
-  const settle = (velocity: number) => {
-    const current = dragX.get();
-    const projected = current + project(velocity);
-    const target = Math.max(bounds.min, Math.min(bounds.max, projected));
-    springTo(target, velocity);
-  };
+      const st = ScrollTrigger.create({
+        trigger: container,
+        start: 'top top',
+        end: () => `+=${calculateDistance()}`,
+        pin: true,
+        scrub: 0.8,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          setScrollProgress(self.progress);
+          const idx = Math.min(totalLooks - 1, Math.floor(self.progress * totalLooks));
+          setActiveLookIndex(idx);
+          gsap.set(track, {
+            x: -self.progress * calculateDistance(),
+          });
+        },
+      });
 
-  const settleHome = () => {
-    const current = dragX.get();
-    springTo(Math.max(bounds.min, Math.min(bounds.max, current)), 0);
-  };
+      triggerRef.current = st;
+    }, container);
 
-  const stepNext = () => {
-    const step = (viewportRef.current?.clientWidth ?? 600) * 0.45;
-    const next = Math.max(bounds.min, dragX.get() - step);
-    springTo(next, 0);
-  };
+    return () => ctx.revert();
+  }, [reducedMotion, totalLooks]);
 
-  const stepPrev = () => {
-    const step = (viewportRef.current?.clientWidth ?? 600) * 0.45;
-    const next = Math.min(bounds.max, dragX.get() + step);
-    springTo(next, 0);
-  };
-
-  const onWindowMove = (e: PointerEvent) => {
-    const history = historyRef.current;
-    if (history.length === 0) return;
-    const last = history[history.length - 1];
-    const dx = e.clientX - last.x;
-
-    if (!last.committed && Math.abs(dx) < 10) return;
-    if (!last.committed) {
-      history.forEach((h) => (h.committed = true));
-      didDragRef.current = true;
-    }
-
-    const raw = dragX.get() + dx;
-    let next = raw;
-    if (raw > bounds.max) next = bounds.max + rubberband(raw - bounds.max, viewportRef.current?.clientWidth ?? 800);
-    else if (raw < bounds.min) next = bounds.min + rubberband(raw - bounds.min, viewportRef.current?.clientWidth ?? 800);
-    dragX.set(next);
-
-    history.push({ t: e.timeStamp, x: e.clientX, committed: true });
-    while (history.length > 2 && history[1].t < e.timeStamp - 120) history.shift();
-  };
-
-  const endGesture = () => {
-    const history = historyRef.current;
-    historyRef.current = [];
-    window.removeEventListener('pointermove', onWindowMove);
-
-    if (didDragRef.current) suppressClickRef.current = true;
-    didDragRef.current = false;
-
-    if (history.length < 2) {
-      settleHome();
-      return;
-    }
-    const first = history[0];
-    const last = history[history.length - 1];
-    const dt = (last.t - first.t) / 1000;
-    if (dt <= 0) return;
-    const velocity = (last.x - first.x) / dt;
-    settle(velocity);
-  };
-
-  const onWindowUp = () => endGesture();
-  const onWindowCancel = () => endGesture();
-
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      /* no-op */
-    }
-    animate(dragX, dragX.get(), { duration: 0 });
-    historyRef.current = [{ t: e.timeStamp, x: e.clientX, committed: false }];
-    didDragRef.current = false;
-
-    window.addEventListener('pointermove', onWindowMove);
-    window.addEventListener('pointerup', onWindowUp, { once: true });
-    window.addEventListener('pointercancel', onWindowCancel, { once: true });
-  };
-
-  const onClickCapture = (e: React.MouseEvent) => {
-    if (suppressClickRef.current) {
-      suppressClickRef.current = false;
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    const step = 320;
-    if (e.key === 'ArrowRight') {
-      const next = Math.max(bounds.min, dragX.get() - step);
-      springTo(next, 0);
-    } else if (e.key === 'ArrowLeft') {
-      const next = Math.min(bounds.max, dragX.get() + step);
-      springTo(next, 0);
+  const stepTo = (index: number) => {
+    const clamped = Math.max(0, Math.min(totalLooks - 1, index));
+    if (triggerRef.current) {
+      const targetProgress = clamped / (totalLooks - 1 || 1);
+      const st = triggerRef.current;
+      const targetScroll = st.start + targetProgress * (st.end - st.start);
+      window.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth',
+      });
     }
   };
 
   return (
     <div
-      ref={viewportRef}
-      className="relative overflow-hidden cursor-grab active:cursor-grabbing select-none touch-pan-y focus-visible:outline-2 focus-visible:outline-sienna rounded-2xl"
-      onPointerDown={onPointerDown}
-      onClickCapture={onClickCapture}
-      onKeyDown={handleKeyDown}
-      role="region"
-      aria-label="Lookbook gallery — drag or use arrow keys to explore"
-      tabIndex={0}
+      ref={containerRef}
+      className={`relative w-full overflow-hidden select-none ${
+        reducedMotion ? 'py-12' : 'min-h-[100dvh] flex flex-col justify-center'
+      }`}
     >
-      <motion.div
+      {/* Header & Live Progress Controls */}
+      <div className="container-void mb-8">
+        <div className="flex flex-wrap items-end justify-between gap-6 pb-4 border-b border-hairline">
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-sienna font-bold mb-2 inline-flex items-center gap-3">
+              <span className="w-6 h-px bg-sienna" />
+              The Plate
+            </p>
+            <h2
+              className="text-[clamp(2rem,4vw,3.5rem)] leading-[0.95] tracking-[-0.03em] font-bold text-ink"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              The full plate
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs tracking-[0.2em] uppercase font-bold text-ink">
+                Look <span className="text-sienna">{String(activeLookIndex + 1).padStart(2, '0')}</span> / {String(totalLooks).padStart(2, '0')}
+              </span>
+              <div className="w-28 sm:w-36 h-1 bg-hairline rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-sienna transition-all duration-150 rounded-full"
+                  style={{ width: `${Math.max(8, scrollProgress * 100)}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Step navigation buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => stepTo(activeLookIndex - 1)}
+                disabled={activeLookIndex === 0}
+                aria-label="Previous look"
+                className="w-10 h-10 rounded-full border border-hairline bg-ivory text-ink flex items-center justify-center hover:bg-bone hover:border-ink disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 shadow-sm"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => stepTo(activeLookIndex + 1)}
+                disabled={activeLookIndex === totalLooks - 1}
+                aria-label="Next look"
+                className="w-10 h-10 rounded-full border border-hairline bg-ivory text-ink flex items-center justify-center hover:bg-bone hover:border-ink disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 shadow-sm"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Horizontal Sliding Track */}
+      <div
         ref={trackRef}
-        style={{ x: displayX }}
-        className="flex gap-6 md:gap-8 w-max px-6 md:px-12 py-4"
+        className={`flex gap-6 md:gap-8 px-6 md:px-12 ${
+          reducedMotion ? 'overflow-x-auto snap-x snap-mandatory pb-6' : 'will-change-transform w-max'
+        }`}
       >
         {LOOKS.map((look, i) => (
-          <figure key={look.id} className="group w-[78vw] md:w-[42vw] lg:w-[34vw] shrink-0">
+          <figure
+            key={look.id}
+            className="group w-[82vw] sm:w-[50vw] lg:w-[32vw] xl:w-[28vw] shrink-0 flex flex-col justify-between"
+          >
             <div
-              className="relative aspect-[4/5] overflow-hidden rounded-2xl atelier-frame atelier-frame-hover cursor-pointer shadow-md"
-              onClick={() => {
-                if (!suppressClickRef.current) onOpenLightbox(i);
-              }}
+              className="relative aspect-[4/5] overflow-hidden rounded-2xl atelier-frame atelier-frame-hover cursor-pointer shadow-md bg-bone"
+              onClick={() => onOpenLightbox(i)}
             >
               <Image
                 src={look.image}
                 alt={look.title}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Look number overlay */}
-              <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 shadow-sm">
+
+              {/* Look numeral badge */}
+              <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 shadow-sm">
                 <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white font-bold">
-                  {look.id}
+                  Look {look.id}
                 </span>
               </div>
+
               {/* View CTA */}
-              <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 text-white font-mono text-[10px] tracking-[0.15em] uppercase opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-500 font-bold">
-                View detail <Eye className="w-3.5 h-3.5" />
+              <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 text-white font-mono text-[10px] tracking-[0.15em] uppercase opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-[opacity,transform] duration-500 font-bold">
+                Inspect Detail <Eye className="w-3.5 h-3.5" />
               </span>
             </div>
-            <figcaption className="mt-4 space-y-1">
+
+            <figcaption className="mt-4 space-y-1.5">
               <div className="flex items-baseline justify-between gap-4">
                 <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-mute font-bold">
-                  Look {look.id} — {look.season}
+                  {look.material}
                 </span>
                 <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-sienna font-semibold">
                   {look.subtitle}
@@ -831,21 +759,24 @@ function DragGallery({ onOpenLightbox }: { onOpenLightbox: (index: number) => vo
               <h3 className="text-xl text-ink font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
                 {look.title}
               </h3>
-              <p className="text-sm text-ink-soft max-w-[38ch]">{look.caption}</p>
+              <p className="text-sm text-ink-soft leading-relaxed font-light">{look.caption}</p>
             </figcaption>
           </figure>
         ))}
 
-        {/* Closing card */}
+        {/* Closing Card */}
         <Link
           to="/products"
-          className="group flex w-[60vw] md:w-[28vw] shrink-0 items-center justify-center atelier-card atelier-card-hover rounded-2xl p-8"
+          className="group flex w-[70vw] sm:w-[40vw] lg:w-[26vw] shrink-0 items-center justify-center atelier-card atelier-card-hover rounded-2xl p-8 border border-hairline bg-bone/30"
         >
           <div className="text-center">
-            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-sienna font-bold block mb-4">
-              End of Lookbook
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-sienna font-bold block mb-3">
+              Edition IV Catalog
             </span>
-            <span className="text-3xl text-ink mb-4 block group-hover:text-sienna transition-colors font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+            <span
+              className="text-2xl lg:text-3xl text-ink mb-4 block group-hover:text-sienna transition-colors font-bold"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
               Shop the Series
             </span>
             <span className="btn-island-primary mt-2">
@@ -856,55 +787,6 @@ function DragGallery({ onOpenLightbox }: { onOpenLightbox: (index: number) => vo
             </span>
           </div>
         </Link>
-      </motion.div>
-
-      {/* Progress rail & Quick Navigation Buttons */}
-      <div className="mt-8 pb-2 flex items-center justify-between gap-4 text-ink-mute px-6 md:px-12">
-        <div className="flex items-center gap-3">
-          <MoveHorizontal className="w-4 h-4 shrink-0 text-sienna" aria-hidden="true" />
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase shrink-0 font-bold">Drag</span>
-          <div className="relative h-1 w-36 sm:w-48 bg-hairline rounded-full overflow-hidden">
-            <motion.div
-              style={{ scaleX: progress }}
-              className="absolute inset-0 origin-left bg-sienna rounded-full"
-            />
-          </div>
-          {/* Dynamic Active Look Counter */}
-          <div className="flex items-center gap-1 font-mono text-[10px] tracking-[0.18em] uppercase shrink-0 tabular-nums font-bold">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={activeLookIndex}
-                initial={{ y: 5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -5, opacity: 0 }}
-                transition={{ duration: 0.15, ease: EASE_LUXURY }}
-                className="text-sienna"
-              >
-                {String(activeLookIndex + 1).padStart(2, '0')}
-              </motion.span>
-            </AnimatePresence>
-            <span className="text-ink-mute/50">/</span>
-            <span className="text-ink-mute">{String(LOOKS.length).padStart(2, '0')}</span>
-          </div>
-        </div>
-
-        {/* Quick previous / next step buttons */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={stepPrev}
-            aria-label="Previous looks"
-            className="pressable w-8 h-8 rounded-full border border-hairline hover:border-ink hover:bg-[var(--bone)] text-ink-mute hover:text-ink flex items-center justify-center transition-colors focus-visible:outline-offset-2"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={stepNext}
-            aria-label="Next looks"
-            className="pressable w-8 h-8 rounded-full border border-hairline hover:border-ink hover:bg-[var(--bone)] text-ink-mute hover:text-ink flex items-center justify-center transition-colors focus-visible:outline-offset-2"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -1044,7 +926,7 @@ const MATERIAL_CARDS = [
     title: 'Bias-Cut Mulberry Silk',
     spec: '19 Momme · Yokohama Spun',
     desc: 'Woven on heritage shuttle looms. Patterns are drafted on live movement models so the cloth drapes organically without tension.',
-    image: '/lookbook_look_01_drape.jpg',
+    image: '/lookbook_material_silk.jpg',
     badge: 'Drape Metric: 98.4%',
     span: 'col-span-12 lg:col-span-7',
     aspect: 'min-h-[360px] md:min-h-[420px]',
@@ -1053,7 +935,7 @@ const MATERIAL_CARDS = [
     title: 'Sculpted Biella Wool',
     spec: '540 GSM · Northern Italian Mills',
     desc: 'Dense double-faced virgin wool engineered to hold architectural silhouettes without structural horsehair canvas.',
-    image: '/products/sculpted_wool_coat.png',
+    image: '/lookbook_material_wool.png',
     badge: 'Thermal Caliber: High',
     span: 'col-span-12 lg:col-span-5',
     aspect: 'min-h-[360px] md:min-h-[420px]',
@@ -1062,7 +944,7 @@ const MATERIAL_CARDS = [
     title: 'Botanical Tanned Hide',
     spec: '9-Month Oak Bark Cure',
     desc: 'Treated with mimosa and chestnut extracts before manual brass-roller softening for supple, second-skin weight.',
-    image: '/products/canvas_field_jacket.png',
+    image: '/lookbook_material_hide.png',
     badge: 'Limited Edition 50',
     span: 'col-span-12 lg:col-span-5',
     aspect: 'min-h-[360px] md:min-h-[420px]',
@@ -1071,7 +953,7 @@ const MATERIAL_CARDS = [
     title: 'Architectural Caliper Seams',
     spec: '17kg Steam Calibration · Milan Atelier',
     desc: 'Every lapel and collar edge is pressed under calibrated steam presses, creating razor-sharp drop lines that never collapse.',
-    image: '/products/cashmere_evening_gown.png',
+    image: '/lookbook_material_seams.png',
     badge: 'Hand-Finished Seams',
     span: 'col-span-12 lg:col-span-7',
     aspect: 'min-h-[360px] md:min-h-[420px]',
@@ -1229,29 +1111,9 @@ export default function Lookbook() {
       {/* Material Archive — Gapless Bento */}
       <MaterialBento />
 
-      {/* Look index — drag gallery */}
-      <section className="section-gap border-b border-hairline" aria-labelledby="look-index">
-        <div className="container-void">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-sienna font-bold mb-3 inline-flex items-center gap-3">
-                <span className="w-6 h-px bg-sienna" />
-                The Plate
-              </p>
-              <h2
-                id="look-index"
-                className="text-[clamp(2rem,4vw,3.5rem)] leading-[0.95] tracking-[-0.03em] font-bold"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                The full plate
-              </h2>
-            </div>
-            <p className="text-sm text-ink-mute max-w-[32ch]">
-              Drag through the plate or use navigation controls to explore.
-            </p>
-          </div>
-          <DragGallery onOpenLightbox={openLightbox} />
-        </div>
+      {/* Look index — horizontal scroll-driven plate */}
+      <section id="look-index" className="border-b border-hairline" aria-label="The full plate gallery">
+        <DragGallery onOpenLightbox={openLightbox} />
       </section>
 
       <ChapterStack />
